@@ -59,7 +59,7 @@ const GuestHeader: React.FC = () => {
               ))}
             </div>
             <div className="flex items-center justify-between w-full md:w-auto">
-              <a href="#">
+              <a href={paths.home}>
                 <img
                   className="w-[120px] h-[70px] md:w-[120px] md:h-[70px] sm:w-[70px] sm:h-[30px] xs:w-[50px] xs:h-[30px]"
                   src="/icons/logo/logo.svg"
