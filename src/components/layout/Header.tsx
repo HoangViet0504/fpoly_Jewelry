@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "../Container";
 import { UserIcon } from "@heroicons/react/24/solid"; // hoặc "@heroicons/react/24/solid"
+import { paths } from "../../helper/constant";
 
 interface NavigationItem {
   name: string;
@@ -16,7 +17,7 @@ const navigationRight: NavigationItem[] = [
   { name: "/icons/header/search.svg", href: "#" },
   {
     name: "/icons/header/user.svg",
-    href: "#",
+    href: paths.auth.signIn,
   },
   { name: "/icons/header/cart.svg", href: "#" },
 ];

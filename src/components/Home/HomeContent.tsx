@@ -2,6 +2,8 @@ import React from "react";
 import Carousel from "./Carousel";
 import TabItem from "./TabItem";
 import ContactHome from "./Contact";
+import ListCardByCategory from "./ListCardByCategory";
+import NewFeed from "./newFeed";
 
 export default function HomeContent(): React.ReactElement {
   return (
@@ -16,6 +18,9 @@ export default function HomeContent(): React.ReactElement {
       <Carousel />
       <TabItem />
       <ContactHome />
+      <ListCardByCategory />
+      <NewFeed />
+      <div style={{ height: "60px" }} />
     </div>
   );
 }

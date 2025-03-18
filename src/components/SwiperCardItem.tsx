@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -13,7 +13,8 @@ interface ProductProps {
 export default function SwiperCardItem({
   data,
 }: ProductProps): React.ReactElement {
-  const swiperRef = useRef<any>(null); // Lưu Swiper instance
+  const swiperRef = useRef<any>(null);
+  const [isHovering, setIsHovering] = useState<boolean>(false); // Thêm state kiểm soát hover
 
   return (
     <div className=" relative">
@@ -59,49 +60,106 @@ export default function SwiperCardItem({
             modules={[Autoplay, Navigation]}
             slidesPerView={4}
             spaceBetween={20}
-            autoplay={{ delay: 2000, disableOnInteraction: false }}
+            autoplay={{ delay: 1000, pauseOnMouseEnter: true }}
             loop
             onSwiper={(swiper) => (swiperRef.current = swiper)} // Lưu Swiper instance vào ref
             className="mb-6"
           >
             {data?.map((product) => (
-              <SwiperSlide key={product.id} className="group relative">
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
-                  <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75">
-                    <img
-                      style={{ borderRadius: "4px" }}
-                      src={product.imageSrc}
-                      alt={product.imageAlt}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4 space-y-2">
-                    <h3 className="text-sm font-medium text-gray-900">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
-                    </h3>
-                    <p
+              <SwiperSlide
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                key={product.id}
+                className="group relative"
+              >
+                <div
+                  key={product.id}
+                  style={{ height: "460px", cursor: "pointer" }}
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md  transition-opacity duration-300 hover:opacity-[0.8]"
+                >
+                  <div className="group relative">
+                    {/* Hình ảnh */}
+                    <div className="aspect-w-3 aspect-h-4 bg-gray-200">
+                      <img
+                        style={{ borderRadius: "4px" }}
+                        src={product.imageSrc}
+                        alt={product.imageAlt}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Nội dung sản phẩm */}
+                    <div className="p-4 space-y-2">
+                      <h3
+                        style={{
+                          minHeight: "40px",
+                          width: "240px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 2,
+                          whiteSpace: "normal",
+                        }}
+                        className="text-sm font-medium text-gray-900"
+                      >
+                        <a href={product.href}>{product.name}</a>
+                      </h3>
+                      <p
+                        style={{
+                          width: "230px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 2,
+                          whiteSpace: "normal",
+                        }}
+                        className="text-sm text-gray-500"
+                      >
+                        {product.description}
+                      </p>
+                      <p className="text-sm italic text-gray-500">
+                        Màu sắc : {product.options}
+                      </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p className="text-base font-semibold text-gray-900">
+                          Giá : {product.price}
+                        </p>
+                        <del className="text-base font-semibold text-gray-900">
+                          Giá gốc: {product.price}
+                        </del>
+                      </div>
+                    </div>
+                    {/* Nút "Mua ngay" & "Thêm vào giỏ hàng" */}
+                    <div
                       style={{
-                        width: "230px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2, // Giới hạn 2 dòng
-                        whiteSpace: "normal",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "10px",
                       }}
-                      className="text-sm text-gray-500"
+                      className="absolute top-32 left-0 right-0 flex justify-center gap-4 opacity-0 group-hover:opacity-[1] "
                     >
-                      {product.description}
-                    </p>
-                    <p className="text-sm italic text-gray-500">
-                      {product.options}
-                    </p>
-                    <p className="text-base font-medium text-gray-900">
-                      {product.price}
-                    </p>
+                      <button
+                        style={{ width: "137.5px", cursor: "pointer" }}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md transition-opacity duration-300 hover:opacity-[0.69]"
+                      >
+                        Mua ngay
+                      </button>
+                      <button
+                        style={{ width: "137.5px", cursor: "pointer" }}
+                        className="bg-green-500 text-white  px-4 py-2 rounded-md transition-opacity duration-300 hover:opacity-[0.69]"
+                      >
+                        Thêm hàng
+                      </button>
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>
