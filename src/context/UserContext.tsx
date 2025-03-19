@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import Cookies from "js-cookie";
 import { User } from "../types/interface";
+import { Token } from "../helper/constant";
 
 export interface UserContextValue {
   user: User | null;
@@ -20,7 +21,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const checkSession = useCallback(async () => {
     setIsLoading(true);
     try {
-      const token = Cookies.get("auth_token");
+      const token = Cookies.get(Token);
       if (!token) {
         setUser(null);
         setError(null);

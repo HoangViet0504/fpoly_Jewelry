@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../../helper/constant";
+import { paths, Token } from "../../helper/constant";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const token = Cookies.get("access-token");
+  const token = Cookies.get(Token);
 
   useEffect(() => {
     if (token) {

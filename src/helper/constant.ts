@@ -139,3 +139,5 @@ export const paths = {
   cart: "/cart",
   checkout: "/checkout",
 } as const;
+
+export const Token = "access-token";

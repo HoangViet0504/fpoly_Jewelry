@@ -1,7 +1,8 @@
 import React from "react";
 import Container from "../Container";
-import { paths } from "../../helper/constant";
+import { paths, Token } from "../../helper/constant";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 interface NavigationItem {
   name: string;
@@ -31,7 +32,9 @@ const navigationTwo: NavigationItem[] = [
 ];
 
 const GuestHeader: React.FC = () => {
-  const token = Cookies.get("access-token");
+  const token = Cookies.get(Token);
+  const navigate = useNavigate();
+
   return (
     <div style={{ width: "100%" }} className="">
       <div style={{ background: "#FAB320" }}>
@@ -76,7 +79,13 @@ const GuestHeader: React.FC = () => {
                   className="text-base font-medium text-white hover:text-gray-300"
                 >
                   {item.name === "/icons/header/user.svg" && token ? (
-                    <p>helo</p>
+                    <button
+                      onClick={() => {
+                        Cookies.remove(Token);
+                      }}
+                    >
+                      Đăng xuất
+                    </button>
                   ) : (
                     <img
                       className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
