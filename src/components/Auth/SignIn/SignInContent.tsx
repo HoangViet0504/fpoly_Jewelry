@@ -1,8 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "../../Container";
 import { paths } from "../../../helper/constant";
+import { Login } from "../../../api/utils/axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { User } from "../../../types/interface";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .required("Email không được rỗng")
+    .matches(
+      /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/,
+      "Email không đúng định dạng"
+    ),
+  password: Yup.string().required("Mật khẩu không được rỗng"),
+});
 export default function SignInContent(): React.ReactElement {
+  const [checkPassword, setCheckPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: async (value) => {
+      try {
+        const responseUser: User = await Login<User>(
+          value.email,
+          value.password
+        );
+
+        Cookies.set("access-token", "có token", { expires: 7 });
+        navigate(paths.home, { replace: true });
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    },
+  });
   return (
     <Container>
       <div className="min-h-full flex">
@@ -93,7 +131,7 @@ export default function SignInContent(): React.ReactElement {
               </div>
 
               <div className="mt-6">
-                <form action="#" method="POST" className="space-y-6">
+                <form onSubmit={formik.handleSubmit} className="space-y-6">
                   <div>
                     <label
                       htmlFor="email"
@@ -106,11 +144,18 @@ export default function SignInContent(): React.ReactElement {
                         id="email"
                         name="email"
                         type="email"
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                        onBlur={formik.handleBlur}
                         autoComplete="email"
-                        required
                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       />
                     </div>
+                    {formik.touched.email && formik.errors.email && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {formik.errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-1">
@@ -120,16 +165,35 @@ export default function SignInContent(): React.ReactElement {
                     >
                       Mật khẩu
                     </label>
-                    <div className="mt-1">
+                    <div className="mt-1 relative">
                       <input
                         id="password"
                         name="password"
-                        type="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password}
+                        onFocus={() => setCheckPassword(true)}
+                        onBlur={(e) => {
+                          setCheckPassword(false);
+                          formik.handleBlur(e);
+                        }}
+                        type={checkPassword ? "text" : "password"}
                         autoComplete="current-password"
-                        required
                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       />
+                      <button
+                        style={{ cursor: "pointer" }}
+                        type="button"
+                        onClick={() => setCheckPassword(!checkPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                      >
+                        {checkPassword ? "Ẩn" : "Hiện"}
+                      </button>
                     </div>
+                    {formik.touched.password && formik.errors.password && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {formik.errors.password}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between">

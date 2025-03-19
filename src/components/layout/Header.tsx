@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "../Container";
-import { UserIcon } from "@heroicons/react/24/solid"; // hoặc "@heroicons/react/24/solid"
 import { paths } from "../../helper/constant";
+import Cookies from "js-cookie";
 
 interface NavigationItem {
   name: string;
@@ -31,6 +31,7 @@ const navigationTwo: NavigationItem[] = [
 ];
 
 const GuestHeader: React.FC = () => {
+  const token = Cookies.get("access-token");
   return (
     <div style={{ width: "100%" }} className="">
       <div style={{ background: "#FAB320" }}>
@@ -67,18 +68,22 @@ const GuestHeader: React.FC = () => {
                 />
               </a>
             </div>
-            <div className="hidden space-x-8 md:flex ">
+            <div className="hidden space-x-8 md:flex items-center ">
               {navigationRight.map((item, index) => (
                 <a
                   key={index}
                   href={item.href}
                   className="text-base font-medium text-white hover:text-gray-300"
                 >
-                  <img
-                    className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
-                    src={item.name}
-                    alt=""
-                  />
+                  {item.name === "/icons/header/user.svg" && token ? (
+                    <p>helo</p>
+                  ) : (
+                    <img
+                      className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
+                      src={item.name}
+                      alt=""
+                    />
+                  )}
                 </a>
               ))}
             </div>
