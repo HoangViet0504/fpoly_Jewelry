@@ -10,7 +10,7 @@ interface NavigationItem {
 
 // Mảng navigation được khai báo với kiểu dữ liệu
 const navigationLeft: NavigationItem[] = [
-  { name: "ABOUT US", href: "/" },
+  { name: "ABOUT US", href: paths.about },
   { name: "STORE", href: "#" },
 ];
 const navigationRight: NavigationItem[] = [
@@ -19,7 +19,7 @@ const navigationRight: NavigationItem[] = [
     name: "/icons/header/user.svg",
     href: paths.auth.signIn,
   },
-  { name: "/icons/header/cart.svg", href: "#" },
+  { name: "/icons/header/cart.svg", href: paths.cart },
 ];
 
 const navigationTwo: NavigationItem[] = [
