@@ -135,4 +135,7 @@ export const paths = {
     signUp: "/sign-up",
     resetPassword: "/forgot-password",
   },
+  about: "/about-us",
+  cart: "/cart",
+  checkout: "/checkout",
 } as const;
