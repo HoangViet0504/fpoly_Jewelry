@@ -44,7 +44,7 @@ export default function SignInContent(): React.ReactElement {
   return (
     <Container>
       <div className="min-h-full flex">
-        <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div className="flex-1 flex flex-col justify-center  px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
             <div>
               <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
@@ -214,7 +214,7 @@ export default function SignInContent(): React.ReactElement {
 
                     <div className="text-sm">
                       <a
-                        href="#"
+                        href={paths.auth.resetPassword}
                         className="font-medium text-blue-500 hover:text-blue-700 hover:underline"
                       >
                         Quên mật khẩu
@@ -233,8 +233,9 @@ export default function SignInContent(): React.ReactElement {
 
                   <div>
                     <button
+                      style={{ cursor: "pointer" }}
                       type="submit"
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Đăng Nhập
                     </button>

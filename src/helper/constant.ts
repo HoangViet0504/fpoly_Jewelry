@@ -133,11 +133,13 @@ export const paths = {
   auth: {
     signIn: "/sign-in",
     signUp: "/sign-up",
-    resetPassword: "/forgot-password",
+    resetPassword: "/reset-password",
   },
   about: "/about-us",
   cart: "/cart",
   checkout: "/checkout",
+  profile: "/profile",
+  errors: { notFound: "/not-found" },
 } as const;
 
 export const Token = "access-token";
