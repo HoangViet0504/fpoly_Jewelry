@@ -1,198 +1,176 @@
-interface ContactDetail {
-  name: string;
-  email: string;
-  telephone: string;
-}
+import React from "react";
 
-interface Location {
-  city: string;
-  address: string[];
-}
-
-interface FAQ {
-  id: number;
-  question: string;
-  answer: string;
-}
-
-const contactDetails: ContactDetail[] = [
-  { name: "Support", email: "support@example.com", telephone: "+123456789" },
-  { name: "Sales", email: "sales@example.com", telephone: "+987654321" },
-];
-
-const locations: Location[] = [
-  { city: "New York", address: ["123 Main St", "New York, NY 10001"] },
-  {
-    city: "San Francisco",
-    address: ["456 Market St", "San Francisco, CA 94103"],
-  },
-];
-
-const faqs: FAQ[] = [
-  {
-    id: 1,
-    question: "How do I sign up?",
-    answer: "You can sign up by clicking the Sign Up button.",
-  },
-  {
-    id: 2,
-    question: "Is this service free?",
-    answer: "Yes, our basic plan is free to use.",
-  },
-];
-
-export default function AboutContent() {
+const AboutContent = () => {
   return (
-    <main>
-      {/* Side-by-side grid */}
-      <div className="bg-white">
-        <div className="max-w-md mx-auto py-24 px-4 sm:max-w-3xl sm:py-32 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="divide-y divide-warm-gray-200">
-            <section
-              className="lg:grid lg:grid-cols-3 lg:gap-8"
-              aria-labelledby="contact-heading"
-            >
-              <h2
-                id="contact-heading"
-                className="text-2xl font-extrabold text-warm-gray-900 sm:text-3xl"
-              >
-                Get in touch
-              </h2>
-              <div className="mt-8 grid grid-cols-1 gap-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 lg:mt-0 lg:col-span-2">
-                {contactDetails.map((item) => (
-                  <div key={item.name}>
-                    <h3 className="text-lg font-medium text-warm-gray-900">
-                      {item.name}
-                    </h3>
-                    <dl className="mt-2 text-base text-warm-gray-500">
-                      <div>
-                        <dt className="sr-only">Email</dt>
-                        <dd>{item.email}</dd>
-                      </div>
-                      <div className="mt-1">
-                        <dt className="sr-only">Phone number</dt>
-                        <dd>{item.telephone}</dd>
-                      </div>
-                    </dl>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section
-              className="mt-16 pt-16 lg:grid lg:grid-cols-3 lg:gap-8"
-              aria-labelledby="location-heading"
-            >
-              <h2
-                id="location-heading"
-                className="text-2xl font-extrabold text-warm-gray-900 sm:text-3xl"
-              >
-                Locations
-              </h2>
-              <div className="mt-8 grid grid-cols-1 gap-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 lg:mt-0 lg:col-span-2">
-                {locations.map((location) => (
-                  <div key={location.city}>
-                    <h3 className="text-lg font-medium text-warm-gray-900">
-                      {location.city}
-                    </h3>
-                    <div className="mt-2 text-base text-warm-gray-500 space-y-1">
-                      {location.address.map((line) => (
-                        <p key={line}>{line}</p>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ */}
-      <div className="bg-warm-gray-50">
-        <div className="max-w-md mx-auto py-24 px-4 sm:max-w-3xl sm:py-32 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="lg:grid lg:grid-cols-3 lg:gap-8">
-            <div>
-              <h2 className="text-3xl font-extrabold text-warm-gray-900">
-                Frequently asked questions
-              </h2>
-              <p className="mt-4 text-lg text-warm-gray-500">
-                Can’t find the answer you’re looking for? Reach out to our{" "}
-                <a
-                  href="#"
-                  className="font-medium text-cyan-700 hover:text-cyan-600"
-                >
-                  customer support
-                </a>{" "}
-                team.
-              </p>
-            </div>
-            <div className="mt-12 lg:mt-0 lg:col-span-2">
-              <dl className="space-y-12">
-                {faqs.map((faq) => (
-                  <div key={faq.id}>
-                    <dt className="text-lg font-medium text-warm-gray-900">
-                      {faq.question}
-                    </dt>
-                    <dd className="mt-2 text-base text-warm-gray-500">
-                      {faq.answer}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Newsletter */}
-      <div className="relative">
-        <div
-          className="absolute left-0 right-0 h-1/2 bg-warm-gray-50"
-          aria-hidden="true"
+    <div className="w-full">
+      {/* Hero Section */}
+      <div className="relative h-[60vh] w-full">
+        <img
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          src="/images/home/banner/banner1.jpg" // Add your hero image
+          alt="Luxury Jewelry"
         />
-        <div className="relative max-w-md mx-auto px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="py-10 px-6 bg-gradient-to-l from-sky-800 to-cyan-700 rounded-3xl sm:py-16 sm:px-12 lg:py-20 lg:px-20 lg:flex lg:items-center">
-            <div className="lg:w-0 lg:flex-1">
-              <h2 className="text-3xl font-extrabold tracking-tight text-white">
-                Sign up for our newsletter
-              </h2>
-              <p className="mt-4 max-w-3xl text-lg text-cyan-100">
-                Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-                Lorem cupidatat commodo. Elit sunt amet fugiat.
+      </div>
+
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-6xl mx-auto">
+          {/* Story Section */}
+          <div className="grid grid-cols-12 gap-8 mb-20">
+            <div className="col-span-12 lg:col-span-6 space-y-6 flex flex-col justify-center">
+              <h2 className="text-3xl font-bold text-gray-800">Our Story</h2>
+              <p className="text-gray-600 leading-relaxed">
+                From humble beginnings in 2023, our passion for excellence has
+                driven us to become a leading name in luxury jewelry. Our
+                journey began with a simple vision: to create extraordinary
+                pieces that tell unique stories and capture life's most precious
+                moments.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                Every piece in our collection represents the perfect harmony
+                between traditional craftsmanship and contemporary design,
+                carefully curated to meet the highest standards of quality and
+                beauty.
               </p>
             </div>
-            <div className="mt-12 sm:w-full sm:max-w-md lg:mt-0 lg:ml-8 lg:flex-1">
-              <form className="sm:flex">
-                <label htmlFor="email-address" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="email-address"
-                  name="email-address"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full border-white px-5 py-3 placeholder-warm-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-cyan-700 focus:ring-white rounded-md"
-                  placeholder="Enter your email"
+            <div className="col-span-12 lg:col-span-6">
+              <div className="h-[500px] rounded-lg overflow-hidden shadow-xl transform hover:scale-105 transition-transform duration-300">
+                <img
+                  src="/images/product/sp1-4.webp"
+                  alt="Jewelry Workshop"
+                  className="w-full h-full object-cover"
                 />
-                <button
-                  type="submit"
-                  className="mt-3 w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-cyan-700 focus:ring-green-400 sm:mt-0 sm:ml-3 sm:w-auto sm:flex-shrink-0"
-                >
-                  Notify me
-                </button>
-              </form>
-              <p className="mt-3 text-sm text-cyan-100">
-                We care about the protection of your data. Read our{" "}
-                <a href="#" className="text-white font-medium underline">
-                  Privacy Policy.
-                </a>
-              </p>
+              </div>
             </div>
           </div>
+          {/* Mission Section */}
+          <section className="bg-gray-50 rounded-2xl p-12 mb-20">
+            <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
+              Our Mission
+            </h2>
+            <p className="text-gray-600 text-center max-w-3xl mx-auto text-lg leading-relaxed">
+              To create extraordinary jewelry that celebrates individuality and
+              craftsmanship. We believe in sustainable luxury, ethical sourcing,
+              and creating pieces that will be cherished for generations to
+              come. Our commitment extends beyond beautiful jewelry – we strive
+              to provide an exceptional experience that makes every customer
+              feel special and valued.
+            </p>
+          </section>
+          {/* Values Section */}
+          <section className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Quality",
+                image: "/images/home/banner/banner1.jpg",
+                description:
+                  "We source only the finest materials and work with master craftsmen to ensure each piece meets our exacting standards of excellence.",
+              },
+              {
+                title: "Service",
+                image: "/images/home/banner/banner1.jpg",
+                description:
+                  "Our dedicated team provides personalized consultation and expert guidance to help you find the perfect piece for every occasion.",
+              },
+              {
+                title: "Design",
+                image: "/images/home/banner/banner1.jpg",
+                description:
+                  "Our designs blend classical elegance with contemporary innovation, creating timeless pieces that stand the test of time.",
+              },
+            ].map((value, index) => (
+              <div key={index} className="group cursor-pointer">
+                <div className="relative h-[300px] mb-4 rounded-lg overflow-hidden">
+                  <img
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    src={value.image}
+                    alt={value.title}
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
+                  <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white">
+                    {value.title}
+                  </h3>
+                </div>
+                <p className="text-gray-600">{value.description}</p>
+              </div>
+            ))}
+          </section>
+          Team Section
+          <section className="mt-20">
+            <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">
+              Meet Our Experts
+            </h2>
+            <div className="grid md:grid-cols-4 gap-8">
+              {[
+                {
+                  name: "Sarah Johnson",
+                  position: "Lead Designer",
+                  description:
+                    "With 15 years of experience in luxury jewelry design",
+                },
+                {
+                  name: "Michael Chen",
+                  position: "Master Craftsman",
+                  description: "Specializing in precious stone setting",
+                },
+                {
+                  name: "Emma Williams",
+                  position: "Customer Experience Director",
+                  description: "Ensuring exceptional service for every client",
+                },
+                {
+                  name: "David Miller",
+                  position: "Quality Control Specialist",
+                  description: "Maintaining our high standards of excellence",
+                },
+              ].map((member, index) => (
+                <div key={index} className="group">
+                  <div className="relative h-[400px] rounded-lg overflow-hidden mb-4">
+                    <img
+                      src={`/images/product/sp2-1.webp`}
+                      alt={member.name}
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <h4 className="text-xl font-semibold text-gray-800">
+                    {member.name}
+                  </h4>
+                  <p className="text-gray-600 font-medium">{member.position}</p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    {member.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+          {/* Contact Section */}
+          <section className="mt-20 bg-gray-50 rounded-2xl p-12">
+            <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
+              Visit Our Showroom
+            </h2>
+            <div className="text-center space-y-4">
+              <p className="text-gray-600">
+                Experience our collection in person
+              </p>
+              <p className="text-gray-800 font-medium">
+                123 Luxury Avenue, Fashion District
+              </p>
+              <p className="text-gray-800 font-medium">
+                Monday - Saturday: 10:00 AM - 8:00 PM
+              </p>
+              <p className="text-gray-800 font-medium">Phone: (555) 123-4567</p>
+              <button className="mt-6 bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors">
+                Book an Appointment
+              </button>
+            </div>
+          </section>
         </div>
       </div>
-    </main>
+    </div>
   );
-}
+};
+
+export default AboutContent;
