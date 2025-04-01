@@ -1,8 +1,8 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import Container from "../Container";
-import { paths, Token } from "../../helper/constant";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { paths } from "../../helper/constant";
+
+import DropDownUser from "../dropDown/DropDownUser";
 
 interface NavigationItem {
   name: string;
@@ -14,14 +14,6 @@ const navigationLeft: NavigationItem[] = [
   { name: "ABOUT US", href: paths.about },
   { name: "STORE", href: "#" },
 ];
-const navigationRight: NavigationItem[] = [
-  { name: "/icons/header/search.svg", href: "#" },
-  {
-    name: "/icons/header/user.svg",
-    href: paths.auth.signIn,
-  },
-  { name: "/icons/header/cart.svg", href: paths.cart },
-];
 
 const navigationTwo: NavigationItem[] = [
   { name: "VÒNG TAY", href: "/" },
@@ -32,9 +24,6 @@ const navigationTwo: NavigationItem[] = [
 ];
 
 const GuestHeader: React.FC = () => {
-  const token = Cookies.get(Token);
-  const navigate = useNavigate();
-
   return (
     <div style={{ width: "100%" }} className="">
       <div style={{ background: "#FAB320" }}>
@@ -71,30 +60,30 @@ const GuestHeader: React.FC = () => {
                 />
               </a>
             </div>
-            <div className="hidden space-x-8 md:flex items-center ">
-              {navigationRight.map((item, index) => (
-                <a
-                  key={index}
-                  href={item.href}
-                  className="text-base font-medium text-white hover:text-gray-300"
-                >
-                  {item.name === "/icons/header/user.svg" && token ? (
-                    <button
-                      onClick={() => {
-                        Cookies.remove(Token);
-                      }}
-                    >
-                      Đăng xuất
-                    </button>
-                  ) : (
-                    <img
-                      className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
-                      src={item.name}
-                      alt=""
-                    />
-                  )}
-                </a>
-              ))}
+            <div className="hidden space-x-5 md:flex items-center ">
+              <div
+                style={{ cursor: "pointer" }}
+                className="text-base font-medium text-white hover:text-gray-300"
+              >
+                <img
+                  className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
+                  src="/icons/header/search.svg"
+                  alt=""
+                />
+              </div>
+
+              <DropDownUser />
+              <a
+                style={{ cursor: "pointer" }}
+                href={paths.cart}
+                className="text-base font-medium text-white hover:text-gray-300"
+              >
+                <img
+                  className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] sm:w-[30px] sm:h-[30px] xs:w-[30px] xs:h-[30px]"
+                  src="/icons/header/cart.svg"
+                  alt=""
+                />
+              </a>
             </div>
           </div>
         </Container>

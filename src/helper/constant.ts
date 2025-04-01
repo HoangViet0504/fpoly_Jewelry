@@ -139,6 +139,10 @@ export const paths = {
   cart: "/cart",
   checkout: "/checkout",
   profile: "/profile",
+  dashboard: {
+    overView: "/dashboard/over-view",
+    user: "/dashboard/manage-user",
+  },
   errors: { notFound: "/not-found" },
 } as const;
 

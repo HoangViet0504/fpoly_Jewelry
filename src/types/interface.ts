@@ -27,4 +27,9 @@ export interface User {
   birthday: string;
   is_active: string;
   access_token_forgot_password: string;
+  access_token: string;
+}
+
+export interface dataUser {
+  data: User;
 }

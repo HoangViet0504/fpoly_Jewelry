@@ -7,6 +7,8 @@ import * as Yup from "yup";
 import { User } from "../../../types/interface";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import { UserContextInstance } from "../../../context/UserContext";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -17,10 +19,14 @@ const validationSchema = Yup.object({
     ),
   password: Yup.string().required("Mật khẩu không được rỗng"),
 });
+interface SignInContentProps {
+  data: User;
+}
 export default function SignInContent(): React.ReactElement {
   const [checkPassword, setCheckPassword] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const userContext = React.useContext(UserContextInstance);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -28,16 +34,22 @@ export default function SignInContent(): React.ReactElement {
     },
     validationSchema,
     onSubmit: async (value) => {
+      setLoading(true);
       try {
-        const responseUser: User = await Login<User>(
-          value.email,
-          value.password
-        );
+        const responseUser: SignInContentProps =
+          await Login<SignInContentProps>(value.email, value.password);
+        Cookies.set("access-token", responseUser.data.access_token, {
+          expires: 30,
+        });
 
-        Cookies.set("access-token", "có token", { expires: 7 });
+        if (userContext) {
+          await userContext.checkSession();
+        }
         navigate(paths.home, { replace: true });
+        setLoading(false);
       } catch (error) {
         console.error("Login failed:", error);
+        setLoading(false);
       }
     },
   });
@@ -235,9 +247,14 @@ export default function SignInContent(): React.ReactElement {
                     <button
                       style={{ cursor: "pointer" }}
                       type="submit"
+                      disabled={loading}
                       className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      Đăng Nhập
+                      {loading ? (
+                        <CircularProgress sx={{ color: "#fff" }} size="30px" />
+                      ) : (
+                        "Đăng nhập"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -255,4 +272,7 @@ export default function SignInContent(): React.ReactElement {
       </div>
     </Container>
   );
+}
+function checkSession() {
+  throw new Error("Function not implemented.");
 }
