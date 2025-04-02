@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Star } from "lucide-react";
 
-const ProductDescription = ({ onShowReviews }: { onShowReviews: () => void }) => {
+const ProductDescription = ({
+  onShowReviews,
+}: {
+  onShowReviews: () => void;
+}) => {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Button switch */}
-      <div className="flex border-b border-gray-700">
-        <button className="flex-1 py-3 font-semibold bg-yellow-500 text-black">
+      <div className="flex ">
+        <button className="flex-1 py-3 font-semibold bg-yellow-500  text-black hover:bg-yellow-500">
           Mô tả sản phẩm
         </button>
         <button
-          className="flex-1 py-3 font-semibold text-white bg-transparent hover:bg-gray-800"
+          className="flex-1 py-3 font-semibold text-black bg-transparent hover:bg-yellow-500 "
           onClick={onShowReviews}
         >
           Đánh giá
@@ -18,37 +21,57 @@ const ProductDescription = ({ onShowReviews }: { onShowReviews: () => void }) =>
       </div>
 
       {/* Nội dung mô tả */}
-      <div className="mt-6 text-white text-sm">
-        <p className="mb-2">Tên sản phẩm: Nhẫn Bạc S925 Mafi Lotus Ring Helios Silver Original</p>
+      <div className="mt-6 text-black text-sm">
+        <p className="mb-2">
+          Tên sản phẩm: Nhẫn Bạc S925 Mafi Lotus Ring Helios Silver Original
+        </p>
         <p className="mb-2">Chất liệu: Bạc S925</p>
         <p className="mb-2">Loại đá sử dụng: Không</p>
-        <p className="mb-4">Bảo hành: Theo chính sách bảo hành và nhận đánh sáng sản phẩm trọn đời</p>
+        <p className="mb-4">
+          Bảo hành: Theo chính sách bảo hành và nhận đánh sáng sản phẩm trọn đời
+        </p>
 
         <h3 className="text-lg font-bold text-yellow-500 mb-3">
           ĐẰNG SAU MỖI CHẾ TÁC LUÔN LÀ MỘT CÂU CHUYỆN RIÊNG BIỆT...
         </h3>
 
         <p className="leading-relaxed">
-          Mafi đánh dấu sự trở lại của dòng nhẫn signet tại Helios - biểu tượng của quyền lực, địa vị và trường tồn.
+          Mafi đánh dấu sự trở lại của dòng nhẫn signet tại Helios - biểu tượng
+          của quyền lực, địa vị và trường tồn.
         </p>
       </div>
     </div>
   );
 };
 
-const ProductReviews = ({
-  onHideReviews,
-}: {
-  onHideReviews: () => void;
-}) => {
+const ProductReviews = ({ onHideReviews }: { onHideReviews: () => void }) => {
   const [reviews, setReviews] = useState([
-    { name: "Nguyễn Văn A", rating: 5, comment: "Nhẫn đẹp, sáng bóng, đeo rất vừa vặn!", date: "12/03/2025" },
-    { name: "Trần Thị B", rating: 4, comment: "Chất lượng tốt, nhưng giao hàng hơi lâu.", date: "10/03/2025" },
-    { name: "Lê Minh C", rating: 5, comment: "Mẫu mã tinh tế, rất hợp với phong cách của mình.", date: "08/03/2025" },
+    {
+      name: "Nguyễn Văn A",
+      rating: 5,
+      comment: "Nhẫn đẹp, sáng bóng, đeo rất vừa vặn!",
+      date: "12/03/2025",
+    },
+    {
+      name: "Trần Thị B",
+      rating: 4,
+      comment: "Chất lượng tốt, nhưng giao hàng hơi lâu.",
+      date: "10/03/2025",
+    },
+    {
+      name: "Lê Minh C",
+      rating: 5,
+      comment: "Mẫu mã tinh tế, rất hợp với phong cách của mình.",
+      date: "08/03/2025",
+    },
   ]);
 
   const [showForm, setShowForm] = useState(false);
-  const [newReview, setNewReview] = useState({ name: "", rating: 5, comment: "" });
+  const [newReview, setNewReview] = useState({
+    name: "",
+    rating: 5,
+    comment: "",
+  });
 
   const handleSubmitReview = () => {
     if (!newReview.name || !newReview.comment) return;
@@ -68,7 +91,7 @@ const ProductReviews = ({
       {/* Button switch */}
       <div className="flex border-b border-gray-700">
         <button
-          className="flex-1 py-3 font-semibold text-white bg-transparent hover:bg-gray-800"
+          className="flex-1 py-3 font-semibold text-black bg-transparent hover:bg-yellow-500"
           onClick={onHideReviews}
         >
           Mô tả sản phẩm
@@ -79,7 +102,7 @@ const ProductReviews = ({
       </div>
 
       {/* Nội dung đánh giá */}
-      <div className="mt-6 text-white text-sm">
+      <div className="mt-6 text-black text-sm">
         <h3 className="text-lg font-bold mb-2">Phản hồi từ khách hàng</h3>
         <p className="text-yellow-400 font-semibold mb-2">
           ⭐ 4.5 trên 5 sao (dựa trên {reviews.length} đánh giá)
@@ -87,7 +110,7 @@ const ProductReviews = ({
 
         {/* Nút viết đánh giá */}
         <button
-          className="mt-4 px-4 py-2 border border-white text-white rounded-md hover:bg-gray-800"
+          className="mt-4 px-4 py-2 border border-white text-black rounded-md hover:bg-gray-800"
           onClick={() => setShowForm(!showForm)}
         >
           Viết đánh giá
@@ -99,14 +122,18 @@ const ProductReviews = ({
             <input
               type="text"
               placeholder="Tên của bạn"
-              className="w-full p-2 mb-2 bg-gray-800 text-white border border-gray-600 rounded-md"
+              className="w-full p-2 mb-2 bg-gray-800 text-black border border-gray-600 rounded-md"
               value={newReview.name}
-              onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+              onChange={(e) =>
+                setNewReview({ ...newReview, name: e.target.value })
+              }
             />
             <select
-              className="w-full p-2 mb-2 bg-gray-800 text-white border border-gray-600 rounded-md"
+              className="w-full p-2 mb-2 bg-gray-800 text-black border border-gray-600 rounded-md"
               value={newReview.rating}
-              onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
+              onChange={(e) =>
+                setNewReview({ ...newReview, rating: Number(e.target.value) })
+              }
             >
               {[5, 4, 3, 2, 1].map((star) => (
                 <option key={star} value={star}>
@@ -116,9 +143,11 @@ const ProductReviews = ({
             </select>
             <textarea
               placeholder="Nhận xét của bạn"
-              className="w-full p-2 mb-2 bg-gray-800 text-white border border-gray-600 rounded-md"
+              className="w-full p-2 mb-2 bg-gray-800 text-black border border-gray-600 rounded-md"
               value={newReview.comment}
-              onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+              onChange={(e) =>
+                setNewReview({ ...newReview, comment: e.target.value })
+              }
             />
             <button
               className="w-full px-4 py-2 bg-yellow-500 text-black font-semibold rounded-md"
@@ -151,7 +180,7 @@ const ProductPage = () => {
   const [showReviews, setShowReviews] = useState(false);
 
   return (
-    <div className="bg-black p-6">
+    <div className=" p-6">
       {!showReviews ? (
         <ProductDescription onShowReviews={() => setShowReviews(true)} />
       ) : (

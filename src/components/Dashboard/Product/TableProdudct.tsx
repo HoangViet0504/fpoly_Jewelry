@@ -1,9 +1,10 @@
 import { UserIcon } from "@heroicons/react/solid";
 import Navigation from "../../Navigation";
-import CreateUser from "./CreateUser";
 import { useState } from "react";
 import DropDownHandle from "../DropDownHandle";
 import ConfirmDeleted from "../../Dialog/ConfirmDeleted";
+import CreateProduct from "./CreateProduct";
+import { productsTab1 } from "../../../helper/constant";
 <svg
   xmlns="http://www.w3.org/2000/svg"
   className="h-5 w-5"
@@ -108,7 +109,7 @@ const people = [
   // More people...
 ];
 
-export default function TableUser() {
+export default function TableProduct() {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -124,7 +125,7 @@ export default function TableUser() {
             type="button"
             className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 "
           >
-            Add user
+            Add product
             <UserIcon className="ml-3 -mr-1 h-5 w-5" aria-hidden="true" />
           </button>
         </div>
@@ -139,6 +140,18 @@ export default function TableUser() {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
+                        Id
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Image
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Name
                       </th>
 
@@ -146,25 +159,31 @@ export default function TableUser() {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Phone
+                        Price
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        BirthDate
+                        Sale
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Options
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Description
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Role
                       </th>
                       <th
                         scope="col"
@@ -178,35 +197,62 @@ export default function TableUser() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {people.map((person) => (
-                      <tr key={person.email}>
+                    {productsTab1.map((product, index) => (
+                      <tr key={product.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {index + 1}
+                          </div>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10">
+                            <div style={{ width: "80px", height: "80px" }}>
                               <img
-                                className="h-10 w-10 rounded-full"
-                                src={person.image}
+                                style={{
+                                  borderRadius: "10px",
+                                  objectFit: "cover",
+                                }}
+                                src={product.imageSrc}
                                 alt=""
                               />
                             </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">
-                                {person.name}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {person.email}
-                              </div>
-                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div
+                            style={{
+                              maxWidth: "100px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {product.name}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {person.title}
+                            {product.price}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">$30</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {person.birthdate}
+                            {product.options}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div
+                            style={{
+                              maxWidth: "100px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {product.description}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -214,9 +260,7 @@ export default function TableUser() {
                             Active
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {person.role}
-                        </td>
+
                         <td
                           style={{ cursor: "pointer", position: "relative" }}
                           className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
@@ -237,7 +281,11 @@ export default function TableUser() {
         </div>
         <Navigation />
       </div>
-      <CreateUser isEdit={isEdit} open={openCreate} setOpen={setOpenCreate} />
+      <CreateProduct
+        isEdit={isEdit}
+        open={openCreate}
+        setOpen={setOpenCreate}
+      />
       <ConfirmDeleted open={openDelete} setOpen={setOpenDelete} />
     </>
   );

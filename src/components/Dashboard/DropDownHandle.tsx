@@ -9,19 +9,27 @@ import {
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
-
-export default function DropDownHandle() {
+interface DropDownHandleProps {
+  setIsEdit: (value: boolean) => void;
+  setOpenForm: (value: boolean) => void;
+  setOpenDelete: (value: boolean) => void;
+}
+export default function DropDownHandle({
+  setIsEdit,
+  setOpenForm,
+  setOpenDelete,
+}: DropDownHandleProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <div>
+    <Menu as="div" className="flex justify-center">
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Menu.Button className="bg-white" onClick={() => setIsOpen(!isOpen)}>
           <DotsVerticalIcon
-            style={{ cursor: "pointer", marginLeft: "10px" }}
+            style={{ cursor: "pointer" }}
             className={classNames(
               isOpen ? "text-red-500" : "text-gray-400",
-              "mr-10 flex-shrink-0 h-6 w-6 hover:opacity-80"
+              " flex-shrink-0 h-6 w-6 hover:opacity-80"
             )}
             aria-hidden="true"
           />
@@ -38,12 +46,17 @@ export default function DropDownHandle() {
         leaveTo="transform opacity-0 scale-95"
         afterLeave={() => setIsOpen(false)} // Khi menu đóng thì reset state
       >
-        <Menu.Items className="origin-top-right absolute -right-16 z-50 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+        <Menu.Items className="origin-top-right absolute right-2.5 z-50 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <button
+                  style={{ width: "100%", cursor: "pointer" }}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsEdit(true);
+                    setOpenForm(true);
+                  }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm"
@@ -54,7 +67,7 @@ export default function DropDownHandle() {
                     aria-hidden="true"
                   />
                   Edit
-                </a>
+                </button>
               )}
             </Menu.Item>
           </div>
@@ -62,8 +75,11 @@ export default function DropDownHandle() {
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <button
+                  onClick={() => {
+                    setOpenDelete(true);
+                  }}
+                  style={{ width: "100%", cursor: "pointer" }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm"
@@ -74,7 +90,7 @@ export default function DropDownHandle() {
                     aria-hidden="true"
                   />
                   Delete
-                </a>
+                </button>
               )}
             </Menu.Item>
           </div>

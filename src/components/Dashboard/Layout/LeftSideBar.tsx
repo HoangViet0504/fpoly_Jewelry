@@ -26,10 +26,12 @@ const navigation = [
     href: paths.dashboard.user,
     icon: UsersIcon,
   },
-  { name: "Product", href: "#", icon: FolderIcon },
-  { name: "Calendar", href: "#", icon: CalendarIcon },
-  { name: "Documents", href: "#", icon: InboxIcon },
-  { name: "Reports", href: "#", icon: ChartBarIcon },
+  { name: "Product", href: paths.dashboard.product, icon: FolderIcon },
+  { name: "Categories", href: paths.dashboard.categories, icon: CalendarIcon },
+  { name: "Collection", href: "#", icon: CalendarIcon },
+  { name: "Order", href: "#", icon: InboxIcon },
+  { name: "Vocher", href: "#", icon: InboxIcon },
+  // { name: "Reports", href: "#", icon: ChartBarIcon },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },

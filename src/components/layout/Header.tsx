@@ -16,11 +16,11 @@ const navigationLeft: NavigationItem[] = [
 ];
 
 const navigationTwo: NavigationItem[] = [
-  { name: "VÒNG TAY", href: "/" },
-  { name: "NHẪN", href: "#" },
-  { name: "DÂY CHUYỀN", href: "#" },
-  { name: "KHUYÊN TAI", href: "#" },
-  { name: "BỘ SƯU TẬP", href: "#" },
+  { name: "VÒNG TAY", href: paths.product },
+  { name: "NHẪN", href: paths.product },
+  { name: "DÂY CHUYỀN", href: paths.product },
+  { name: "KHUYÊN TAI", href: paths.product },
+  { name: "BỘ SƯU TẬP", href: paths.product },
 ];
 
 const GuestHeader: React.FC = () => {

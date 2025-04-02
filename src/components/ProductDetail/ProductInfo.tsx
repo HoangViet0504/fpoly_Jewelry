@@ -20,7 +20,7 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black text-white ">
+    <div className="flex justify-center items-center   text-black ">
       <div className="flex gap-10 max-w-6xl w-full">
         {/* Hình ảnh sản phẩm */}
         <div className="flex gap-4 w-1/2">
@@ -32,7 +32,9 @@ export default function ProductDetail() {
                 src={img}
                 alt="product"
                 className={`w-20 h-20 cursor-pointer rounded-md border ${
-                  selectedImage === img ? "border-yellow-500" : "border-gray-600"
+                  selectedImage === img
+                    ? "border-yellow-500"
+                    : "border-gray-600"
                 } hover:opacity-80 transition`}
                 onClick={() => setSelectedImage(img)}
               />
@@ -50,17 +52,24 @@ export default function ProductDetail() {
         <div className="w-1/2 space-y-4">
           <p className="text-sm text-gray-400">Poly Jewelry</p>
           <h2 className="text-3xl font-bold">{product.name}</h2>
-          <p className="text-2xl text-yellow-500 font-semibold">{product.price}</p>
+          <p className="text-2xl text-yellow-500 font-semibold">
+            {product.price}
+          </p>
           <p className="text-sm">{product.purchases} lượt mua</p>
 
           {/* Chọn size */}
-          <p className="text-sm">SIZE vòng tay <span className="text-gray-400">(Hướng dẫn đo size)</span></p>
+          <p className="text-sm">
+            SIZE vòng tay{" "}
+            <span className="text-gray-400">(Hướng dẫn đo size)</span>
+          </p>
           <div className="flex gap-4">
             {product.sizes.map((size) => (
               <button
                 key={size}
                 className={`px-4 py-1 border rounded-md text-sm font-medium transition ${
-                  selectedSize === size ? "border-yellow-500 text-yellow-500 bg-gray-800" : "border-gray-500 text-white hover:border-yellow-500 hover:text-yellow-500"
+                  selectedSize === size
+                    ? "border-yellow-500 text-yellow-500 bg-gray-800"
+                    : "border-gray-500 text-black hover:border-yellow-500 hover:text-yellow-500"
                 }`}
                 onClick={() => setSelectedSize(size)}
               >
@@ -92,8 +101,12 @@ export default function ProductDetail() {
 
           {/* Nút thao tác */}
           <div className="flex gap-4 mt-4">
-            <button className="border px-6 py-3 w-1/2 rounded-md hover:bg-gray-800 transition">THÊM VÀO GIỎ HÀNG</button>
-            <button className="bg-yellow-500 px-6 py-3 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition">MUA NGAY</button>
+            <button className="border px-6 py-3 w-1/2 rounded-md hover:bg-gray-800 transition">
+              THÊM VÀO GIỎ HÀNG
+            </button>
+            <button className="bg-yellow-500 px-6 py-3 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition">
+              MUA NGAY
+            </button>
           </div>
         </div>
       </div>

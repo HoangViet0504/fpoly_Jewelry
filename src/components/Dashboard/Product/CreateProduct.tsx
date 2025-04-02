@@ -7,7 +7,7 @@ interface CreateUserProps {
   isEdit: boolean;
   setOpen: (open: boolean) => void;
 }
-export default function CreateUser({
+export default function CreateProduct({
   setOpen,
   open,
   isEdit = false,
@@ -23,7 +23,7 @@ export default function CreateUser({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle sx={{ display: "flex", justifyContent: "center" }}>
-        {isEdit ? "Chỉnh sửa khách hàng" : "Thêm khách hàng"}
+        {isEdit ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
       </DialogTitle>
       <Container sx={{ maxWidth: "700px !important" }}>
         <div className="sm:mt-0 bg-white ">
@@ -34,15 +34,28 @@ export default function CreateUser({
               <form action="#" method="POST">
                 <div className="shadow overflow-hidden sm:rounded-md">
                   <div
-                    style={{ marginTop: "20px" }}
-                    className="px-4 bg-white  "
+                    style={
+                      {
+                        // marginTop: "20px",
+                      }
+                    }
+                    className="px-4 bg-white "
                   >
-                    <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "20px",
+                      }}
+                    >
                       <label className="block text-sm font-medium text-gray-700">
-                        Avatar
+                        Image product
                       </label>
-                      <div className="mt-1 flex items-center">
-                        <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                      <div className="mt-1 flex items-center gap-2.5">
+                        <span
+                          style={{ borderRadius: "4px" }}
+                          className="inline-block h-16 w-16  overflow-hidden bg-gray-100"
+                        >
                           <svg
                             className="h-full w-full text-gray-300"
                             fill="currentColor"
@@ -51,12 +64,42 @@ export default function CreateUser({
                             <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                           </svg>
                         </span>
-                        <button
-                          type="button"
-                          className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        <span
+                          style={{ borderRadius: "4px" }}
+                          className="inline-block h-16 w-16  overflow-hidden bg-gray-100"
                         >
-                          Change
-                        </button>
+                          <svg
+                            className="h-full w-full text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        </span>
+                        <span
+                          style={{ borderRadius: "4px" }}
+                          className="inline-block h-16 w-16  overflow-hidden bg-gray-100"
+                        >
+                          <svg
+                            className="h-full w-full text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        </span>
+                        <span
+                          style={{ borderRadius: "4px" }}
+                          className="inline-block h-16 w-16  overflow-hidden bg-gray-100"
+                        >
+                          <svg
+                            className="h-full w-full text-gray-300"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                          </svg>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -67,7 +110,7 @@ export default function CreateUser({
                           htmlFor="first-name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          First name
+                          Name
                         </label>
                         <input
                           type="text"
@@ -83,7 +126,7 @@ export default function CreateUser({
                           htmlFor="last-name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Last name
+                          Price
                         </label>
                         <input
                           type="text"
@@ -99,7 +142,7 @@ export default function CreateUser({
                           htmlFor="email-address"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Email address
+                          Price sale
                         </label>
                         <input
                           type="text"
@@ -109,12 +152,13 @@ export default function CreateUser({
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
                         />
                       </div>
+
                       <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="last-name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Phone
+                          quantity
                         </label>
                         <input
                           type="text"
@@ -130,7 +174,7 @@ export default function CreateUser({
                           htmlFor="country"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Thành phố
+                          Options
                         </label>
                         <select
                           id="country"
@@ -149,7 +193,7 @@ export default function CreateUser({
                           htmlFor="country"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Quận / huyện
+                          Danh mục
                         </label>
                         <select
                           id="country"
@@ -163,7 +207,7 @@ export default function CreateUser({
                         </select>
                       </div>
 
-                      <div className="col-span-6 sm:col-span-3">
+                      {/* <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="country"
                           className="block text-sm font-medium text-gray-700"
@@ -196,6 +240,23 @@ export default function CreateUser({
                           autoComplete="family-name"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
                         />
+                      </div> */}
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="comment"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Description
+                        </label>
+                        <div className="mt-1">
+                          <textarea
+                            rows={4}
+                            name="comment"
+                            id="comment"
+                            className=" mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            defaultValue={""}
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -208,57 +269,6 @@ export default function CreateUser({
                         }}
                         className="  py-4"
                       >
-                        <fieldset>
-                          <legend className="text-base font-medium text-gray-900">
-                            By Role
-                          </legend>
-                          <div className="mt-4 space-y-4">
-                            <div className="flex items-start">
-                              <div className="flex items-center h-5">
-                                <input
-                                  id="comments"
-                                  name="comments"
-                                  type="checkbox"
-                                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                />
-                              </div>
-                              <div className="ml-3 text-sm">
-                                <label
-                                  htmlFor="comments"
-                                  className="font-medium text-gray-700"
-                                >
-                                  Admin
-                                </label>
-                                <p className="text-gray-500">
-                                  Get notified when someones posts a comment on
-                                  a posting.
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-start">
-                              <div className="flex items-center h-5">
-                                <input
-                                  id="candidates"
-                                  name="candidates"
-                                  type="checkbox"
-                                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                />
-                              </div>
-                              <div className="ml-3 text-sm">
-                                <label
-                                  htmlFor="candidates"
-                                  className="font-medium text-gray-700"
-                                >
-                                  Customer
-                                </label>
-                                <p className="text-gray-500">
-                                  Get notified when a candidate applies for a
-                                  job.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </fieldset>
                         <fieldset>
                           <div>
                             <legend className="text-base font-medium text-gray-900">

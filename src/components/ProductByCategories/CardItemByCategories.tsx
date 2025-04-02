@@ -1,22 +1,20 @@
 import React from "react";
-import { Product } from "../types/interface";
+import { Product } from "../../types/interface";
 
 interface ProductProps {
   data?: Product[];
-  style?: object;
 }
 
-export default function CardItem({
+export default function CardItemByCategories({
   data,
-  style,
 }: ProductProps): React.ReactElement {
   return (
     <div>
-      <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3">
         {data?.map((product) => (
           <div
             key={product.id}
-            style={{ height: "460px", cursor: "pointer", ...style }}
+            style={{ height: "480px", cursor: "pointer" }}
             className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md  transition-opacity duration-300 hover:opacity-[0.8]"
           >
             <div className="group relative">
