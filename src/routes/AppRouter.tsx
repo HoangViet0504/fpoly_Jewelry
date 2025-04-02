@@ -9,6 +9,8 @@ import CheckoutPage from "../pages/Checkout/CheckoutPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import NotFoundPage from "../pages/404/404";
 import ResetPasswordPage from "../pages/Auth/ResetPassword/ResetPasswordPage";
+import OverViewPage from "../pages/Dashboard/OverView/OverViewPage";
+import UserPage from "../pages/Dashboard/User/UserPage";
 
 const AppRouter = () => (
   <Router>
@@ -22,6 +24,8 @@ const AppRouter = () => (
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/dashboard/over-view" element={<OverViewPage />} />
+      <Route path="/dashboard/manage-user" element={<UserPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </Router>

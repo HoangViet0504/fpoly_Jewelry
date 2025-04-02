@@ -1,10 +1,12 @@
 import "./App.css";
 import AppRouter from "./routes/AppRouter";
-import Header from "../src/components/layout/Header";
+import { UserProvider } from "./context/UserContext";
 function App() {
   return (
     <div>
-      <AppRouter />
+      <UserProvider>
+        <AppRouter />
+      </UserProvider>
     </div>
   );
 }
