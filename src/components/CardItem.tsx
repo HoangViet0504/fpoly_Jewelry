@@ -1,5 +1,6 @@
 import React from "react";
 import { Product } from "../types/interface";
+import { paths } from "../helper/constant";
 
 interface ProductProps {
   data?: Product[];
@@ -14,7 +15,8 @@ export default function CardItem({
     <div>
       <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
         {data?.map((product) => (
-          <div
+          <a
+            href={paths.productDetail}
             key={product.id}
             style={{ height: "460px", cursor: "pointer", ...style }}
             className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md  transition-opacity duration-300 hover:opacity-[0.8]"
@@ -103,7 +105,7 @@ export default function CardItem({
                 </button>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>
