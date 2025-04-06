@@ -3,7 +3,6 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
   CalendarIcon,
-  ChartBarIcon,
   FolderIcon,
   HomeIcon,
   InboxIcon,
@@ -14,25 +13,56 @@ import {
 import { SearchIcon } from "@heroicons/react/solid";
 import { paths } from "../../../helper/constant";
 import { useLocation } from "react-router-dom";
+import { TrashIcon } from "@heroicons/react/solid";
+import { useFilterDashboard } from "../../../stores/useFilterDashboard";
+import { CubeIcon } from "@heroicons/react/outline";
+import { TagIcon } from "@heroicons/react/outline";
+import { ShoppingBagIcon } from "@heroicons/react/outline";
+import { TicketIcon } from "@heroicons/react/outline";
 
 const navigation = [
   {
-    name: "Dashboard",
+    name: "Thống kê",
     href: paths.dashboard.overView,
     icon: HomeIcon,
   },
   {
-    name: "User",
+    name: "Khách hàng",
     href: paths.dashboard.user,
     icon: UsersIcon,
   },
-  { name: "Product", href: paths.dashboard.product, icon: FolderIcon },
-  { name: "Categories", href: paths.dashboard.categories, icon: CalendarIcon },
-  { name: "Collection", href: "#", icon: CalendarIcon },
-  { name: "Order", href: "#", icon: InboxIcon },
-  { name: "Vocher", href: "#", icon: InboxIcon },
-  // { name: "Reports", href: "#", icon: ChartBarIcon },
+  {
+    name: "Sản phẩm",
+    href: paths.dashboard.product,
+    icon: CubeIcon,
+  },
+  {
+    name: "Danh mục",
+    href: paths.dashboard.categories,
+    icon: TagIcon,
+  },
+  {
+    name: "Collection",
+    href: "#",
+    icon: TagIcon,
+  },
+  {
+    name: "Mua hàng",
+    href: "#",
+    icon: ShoppingBagIcon,
+  },
+  {
+    name: "Mã giảm giá",
+    href: "#",
+    icon: TicketIcon, // Nếu không có thì dùng GiftIcon thay thế
+  },
+  {
+    name: "Thùng rác",
+    href: "#",
+    icon: TrashIcon,
+  },
 ];
+
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
@@ -50,7 +80,8 @@ export default function LeftSideBar({
 }: LeftSideBarProps): React.ReactElement {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-
+  const { setFilterUser, filterUser, filterCategories, setFilterCategories } =
+    useFilterDashboard();
   return (
     <>
       <div>
@@ -210,7 +241,7 @@ export default function LeftSideBar({
             </button>
             <div className="flex-1 px-4 flex justify-between">
               <div className="flex-1 flex">
-                <form className="w-full flex md:ml-0" action="#" method="GET">
+                <div className="w-full flex md:ml-0">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
@@ -219,14 +250,29 @@ export default function LeftSideBar({
                       <SearchIcon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <input
+                      onChange={(e) => {
+                        if (location.pathname === paths.dashboard.user) {
+                          setFilterUser(e.target.value);
+                        }
+                        if (location.pathname === paths.dashboard.categories) {
+                          setFilterCategories(e.target.value);
+                        }
+                      }}
                       id="search-field"
                       className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
                       placeholder="Search"
                       type="search"
                       name="search"
+                      value={
+                        location.pathname === paths.dashboard.user
+                          ? filterUser
+                          : location.pathname === paths.dashboard.categories
+                          ? filterCategories
+                          : ""
+                      }
                     />
                   </div>
-                </form>
+                </div>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
                 <button

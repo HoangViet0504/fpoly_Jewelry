@@ -1,9 +1,17 @@
 import { UserIcon } from "@heroicons/react/solid";
 import Navigation from "../../Navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropDownHandle from "../DropDownHandle";
 import ConfirmDeleted from "../../Dialog/ConfirmDeleted";
-import { date } from "yup";
+import { Categories } from "../../../types/interface";
+import {
+  DeleteItemHaveToken,
+  GetListByParams,
+  GetListHaveToken,
+} from "../../../api/utils/axios";
+import { useFilterDashboard } from "../../../stores/useFilterDashboard";
+import { ToastMessage } from "../../ToastMessage";
+import CreateCategories from "./CreateCategories";
 <svg
   xmlns="http://www.w3.org/2000/svg"
   className="h-5 w-5"
@@ -13,33 +21,58 @@ import { date } from "yup";
   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
 </svg>;
 
-const Categories = [
-  {
-    id: "1",
-    name: "Dây chuyền",
-    imageSrc: "/images/product/sp1-1.webp",
-    status: "active",
-    date: "10-10-2021",
-  },
-  {
-    id: "2",
-    name: "Nhẫn",
-    imageSrc: "/images/product/sp1-1.webp",
-    status: "active",
-    date: "10-10-2021",
-  },
-  {
-    id: "3",
-    name: "Collection",
-    imageSrc: "/images/product/sp1-1.webp",
-    status: "active",
-    date: "10-10-2021",
-  },
-];
 export default function TableCategories() {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [idCategories, setIdCategories] = useState<string>("");
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [listCategories, setListCategories] = useState<Categories[]>([]);
+  const { filterCategories } = useFilterDashboard();
+
+  async function getAllCategories() {
+    try {
+      const response = await GetListHaveToken<{ data: Categories[] }>(
+        "/getListCategoriesAdmin"
+      );
+      setListCategories(response.data);
+    } catch (error) {}
+  }
+
+  async function getUserFilterCategories() {
+    try {
+      const response = await GetListByParams<{ data: Categories[] }>(
+        "/getListCategoriesAdminByKeyWord",
+        filterCategories
+      );
+      setListCategories(response.data as Categories[]);
+    } catch (error) {}
+  }
+
+  const handleDelete = async () => {
+    try {
+      const response = await DeleteItemHaveToken<{ message: string }>(
+        "/DeleteCategoriesAdminByIsDelete",
+        { id: idCategories }
+      );
+      if (response) {
+        setOpenDelete(false);
+        ToastMessage("success", response.message);
+        setListCategories((item) =>
+          item.filter((user) => user.id_categories !== idCategories)
+        );
+        setIdCategories("");
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getAllCategories();
+  }, []);
+
+  useEffect(() => {
+    getUserFilterCategories();
+  }, [filterCategories]);
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -59,7 +92,7 @@ export default function TableCategories() {
         <div className="flex flex-col">
           <div className="">
             <div>
-              <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div className="shadow  border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full min-h-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
@@ -111,8 +144,8 @@ export default function TableCategories() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {Categories.map((categories, index) => (
-                      <tr key={categories.id}>
+                    {listCategories.map((categories, index) => (
+                      <tr key={index + 1}>
                         <td
                           style={{ textAlign: "center" }}
                           className="px-6 py-4 whitespace-nowrap"
@@ -135,7 +168,10 @@ export default function TableCategories() {
                                   borderRadius: "10px",
                                   objectFit: "cover",
                                 }}
-                                src={categories.imageSrc}
+                                src={
+                                  categories.image_categories ??
+                                  "/images/avatar/avatar_default.jpeg"
+                                }
                                 alt=""
                               />
                             </div>
@@ -156,16 +192,21 @@ export default function TableCategories() {
                               textAlign: "center",
                             }}
                           >
-                            {categories.date}
+                            {!categories.created_at
+                              ? "--/--/--"
+                              : categories.created_at}
                           </div>
                         </td>
 
-                        <td
-                          style={{ textAlign: "center" }}
-                          className="px-6 py-4 whitespace-nowrap"
-                        >
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Active
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              categories.status
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {categories.status ? "Hoạt động" : "Tạm khóa"}
                           </span>
                         </td>
 
@@ -177,6 +218,8 @@ export default function TableCategories() {
                           className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                         >
                           <DropDownHandle
+                            id={categories.id_categories}
+                            setId={setIdCategories}
                             setOpenDelete={setOpenDelete}
                             setOpenForm={setOpenCreate}
                             setIsEdit={setIsEdit}
@@ -192,12 +235,18 @@ export default function TableCategories() {
         </div>
         <Navigation />
       </div>
-      {/* <CreateProduct
+      <CreateCategories
         isEdit={isEdit}
         open={openCreate}
         setOpen={setOpenCreate}
-      /> */}
-      <ConfirmDeleted open={openDelete} setOpen={setOpenDelete} />
+      />
+      <ConfirmDeleted
+        onDelete={handleDelete}
+        title="Xóa danh mục"
+        text="Bạn có chắc chắn muốn xóa không? Nếu xóa, mục này sẽ được chuyển vào thùng rác và sẽ mất hoàn toàn sau 30 ngày."
+        open={openDelete}
+        setOpen={setOpenDelete}
+      />
     </>
   );
 }

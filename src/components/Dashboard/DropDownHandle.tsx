@@ -13,18 +13,28 @@ interface DropDownHandleProps {
   setIsEdit: (value: boolean) => void;
   setOpenForm: (value: boolean) => void;
   setOpenDelete: (value: boolean) => void;
+  id: string;
+  setId: (id: string) => void;
 }
 export default function DropDownHandle({
   setIsEdit,
   setOpenForm,
   setOpenDelete,
+  setId,
+  id,
 }: DropDownHandleProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Menu as="div" className="flex justify-center">
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Menu.Button className="bg-white" onClick={() => setIsOpen(!isOpen)}>
+        <Menu.Button
+          className="bg-white"
+          onClick={() => {
+            setIsOpen(!isOpen);
+            setId(id);
+          }} // Khi click vào icon thì setIdUser về rỗng
+        >
           <DotsVerticalIcon
             style={{ cursor: "pointer" }}
             className={classNames(
@@ -46,7 +56,10 @@ export default function DropDownHandle({
         leaveTo="transform opacity-0 scale-95"
         afterLeave={() => setIsOpen(false)} // Khi menu đóng thì reset state
       >
-        <Menu.Items className="origin-top-right absolute right-2.5 z-50 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+        <Menu.Items
+          className=" absolute right-2.5  mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none "
+          style={{ position: "absolute", zIndex: 99999999 }}
+        >
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
@@ -66,7 +79,7 @@ export default function DropDownHandle({
                     className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true"
                   />
-                  Edit
+                  Chỉnh sửa
                 </button>
               )}
             </Menu.Item>
@@ -89,7 +102,7 @@ export default function DropDownHandle({
                     className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true"
                   />
-                  Delete
+                  Thêm vào thùng rác
                 </button>
               )}
             </Menu.Item>
