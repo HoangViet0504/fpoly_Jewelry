@@ -1,8 +1,10 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../Container";
 import { paths } from "../../helper/constant";
 
 import DropDownUser from "../dropDown/DropDownUser";
+import { GetList } from "../../api/utils/axios";
+import { Categories } from "../../types/interface";
 
 interface NavigationItem {
   name: string;
@@ -15,15 +17,24 @@ const navigationLeft: NavigationItem[] = [
   { name: "STORE", href: "#" },
 ];
 
-const navigationTwo: NavigationItem[] = [
-  { name: "VÒNG TAY", href: paths.product },
-  { name: "NHẪN", href: paths.product },
-  { name: "DÂY CHUYỀN", href: paths.product },
-  { name: "KHUYÊN TAI", href: paths.product },
-  { name: "BỘ SƯU TẬP", href: paths.product },
-];
-
 const GuestHeader: React.FC = () => {
+  const [listCategories, setListCategories] = useState<Categories[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      const resultCategories = await GetList<{ data: Categories[] }>(
+        "/getListCategories"
+      );
+      setListCategories(resultCategories.data as Categories[]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <div style={{ width: "100%" }} className="">
       <div style={{ background: "#FAB320" }}>
@@ -43,6 +54,7 @@ const GuestHeader: React.FC = () => {
             <div className="hidden space-x-8 md:flex ">
               {navigationLeft.map((item) => (
                 <a
+                  style={{ cursor: "pointer" }}
                   key={item.name}
                   href={item.href}
                   className="text-base font-medium text-white hover:text-gray-300"
@@ -92,10 +104,10 @@ const GuestHeader: React.FC = () => {
         <Container>
           <div className="flex items-center justify-center py-4">
             <div className="hidden space-x-8 md:flex ">
-              {navigationTwo.map((item) => (
+              {listCategories.map((item) => (
                 <a
                   key={item.name}
-                  href={item.href}
+                  // href={item.href}
                   className="text-base font-medium text-white hover:text-gray-300"
                 >
                   {item.name}

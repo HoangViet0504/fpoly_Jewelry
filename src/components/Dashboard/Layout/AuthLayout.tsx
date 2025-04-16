@@ -1,10 +1,10 @@
 import Container from "../../Container";
 import LeftSideBar from "./LeftSideBar";
-import AuthGuard from "../../layout/AuthGuard";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../../helper/constant";
+import { PacmanLoader } from "react-spinners";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -12,16 +12,16 @@ interface AuthLayoutProps {
 export default function AuthLayout({
   children,
 }: AuthLayoutProps): React.ReactElement {
-  const { user } = useAuthStore();
+  const { user, isLoading } = useAuthStore();
   const navigate = useNavigate();
-  // useEffect(() => {
+  if (!user) {
+    navigate(paths.cart, { replace: true }); // Chuyển hướng về trang chủ nếu không phải admin
+    return <></>;
+  }
 
-  //   console.log(user);
-
-  //   if (!user || user?.role !== 1) {
-  //     navigate(paths.home, { replace: true }); // Chuyển hướng về trang chủ nếu không phải admin
-  //   }
-  // }, [user]);
+  if (isLoading) {
+    return <PacmanLoader color="#75f1aa" />;
+  }
   return (
     <div>
       <LeftSideBar children={children} />

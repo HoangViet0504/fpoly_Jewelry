@@ -64,6 +64,18 @@ export async function DeleteItemHaveToken<T>(
   }
 }
 
+export async function PostNoToken<T>(url: string, params: unknown): Promise<T> {
+  try {
+    const response = await RestApi.post<T>(url, params, {});
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      ToastMessage("error", error.response.data.message);
+    }
+    throw new Error("Query failed. Please try again later.");
+  }
+}
+
 export async function FetchParamsHaveToken<T>(
   url: string,
   id: number

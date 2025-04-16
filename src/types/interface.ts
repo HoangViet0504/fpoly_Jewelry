@@ -80,6 +80,7 @@ export interface Categories {
   name: string;
   status: boolean;
   is_deleted: boolean;
+  slug: string;
   image_categories: string;
   created_at: string;
   deleted_at: string;

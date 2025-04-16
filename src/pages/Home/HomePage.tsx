@@ -7,6 +7,9 @@ export default function HomePage(): React.ReactElement {
   return (
     <>
       <GuestLayout>
+        <Helmet>
+          <title>Trang chủ </title>
+        </Helmet>
         <HomeContent />
       </GuestLayout>
     </>

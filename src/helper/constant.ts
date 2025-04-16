@@ -135,6 +135,7 @@ export const paths = {
     signUp: "/sign-up",
     resetPassword: "/reset-password",
   },
+  productByCate: (slug: string) => `/product/${slug}`,
   about: "/about-us",
   cart: "/cart",
   checkout: "/checkout",

@@ -5,7 +5,6 @@ import { Menu, Transition } from "@headlessui/react";
 import { paths, Token } from "../../helper/constant";
 import { useAuthStore } from "../../stores/useAuthStore";
 import Cookies from "js-cookie";
-import { UserContextInstance } from "../../context/UserContext";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -13,7 +12,6 @@ function classNames(...classes: string[]) {
 
 export default function DropDownUser() {
   const { user } = useAuthStore();
-  const userContext = useContext(UserContextInstance);
   return (
     <Menu
       style={{ zIndex: "99999" }}
@@ -123,9 +121,6 @@ export default function DropDownUser() {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       Cookies.remove(Token);
-                      if (userContext) {
-                        userContext?.checkSession?.();
-                      }
                     }}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",

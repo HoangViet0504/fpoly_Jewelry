@@ -8,7 +8,6 @@ import { User } from "../../../types/interface";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import { UserContextInstance } from "../../../context/UserContext";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -26,7 +25,6 @@ export default function SignInContent(): React.ReactElement {
   const [checkPassword, setCheckPassword] = useState<boolean>(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const userContext = React.useContext(UserContextInstance);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -42,9 +40,6 @@ export default function SignInContent(): React.ReactElement {
           expires: 30,
         });
 
-        if (userContext) {
-          await userContext.checkSession();
-        }
         navigate(paths.home, { replace: true });
         setLoading(false);
       } catch (error) {
@@ -156,6 +151,7 @@ export default function SignInContent(): React.ReactElement {
                         id="email"
                         name="email"
                         type="email"
+                        placeholder="Vui lòng nhập email của bạn"
                         onChange={formik.handleChange}
                         value={formik.values.email}
                         onBlur={formik.handleBlur}
@@ -180,6 +176,7 @@ export default function SignInContent(): React.ReactElement {
                     <div className="mt-1 relative">
                       <input
                         id="password"
+                        placeholder="Vui lòng nhập mật khẩu của bạn"
                         name="password"
                         onChange={formik.handleChange}
                         value={formik.values.password}
