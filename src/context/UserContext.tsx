@@ -62,8 +62,8 @@ import React, { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useAuthStore } from "../stores/useAuthStore";
 import { Token } from "../helper/constant";
-import { Me } from "../api/utils/axios";
-import { User } from "../types/interface";
+import { FetchParamsHaveToken, Me } from "../api/utils/axios";
+import { User, UserDetail } from "../types/interface";
 
 export interface UserProviderProps {
   children: React.ReactNode;
@@ -79,10 +79,8 @@ export function UserProvider({
       const token = Cookies.get(Token);
       if (token) {
         try {
-          const response = await Me<{ data: { user: User } }>(token);
-          setUser(response.data.user);
-          console.log(response.data.user);
-
+          const response = await Me<{ data: UserDetail }>("/auth/me");
+          setUser(response.data);
           setIsLoading(false);
         } catch (err) {
           console.log(err);
@@ -98,3 +96,13 @@ export function UserProvider({
 
   return <>{children}</>;
 }
+
+// async function getUserById() {
+//   try {
+//     const response = await FetchParamsHaveToken<{ data: UserDetail }>(
+//       "/getUserAdmin",
+//       Number(user?.id_user)
+//     );
+//     setUserDetail(response.data);
+//   } catch (error) {}
+// }

@@ -21,10 +21,10 @@ export async function Login<T>(email: string, password: string): Promise<T> {
   }
 }
 
-export async function Me<T>(token: string): Promise<T> {
+export async function Me<T>(url: string): Promise<T> {
   try {
-    const response = await RestApi.get<T>("/auth/me", {
-      headers: { Authorization: `Bearer ${token}` },
+    const response = await RestApi.get<T>(url, {
+      headers: { Authorization: `Bearer ${Cookies.get(Token)}` },
     });
     return response.data;
   } catch (error) {

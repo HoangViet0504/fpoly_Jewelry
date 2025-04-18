@@ -85,3 +85,12 @@ export interface Categories {
   created_at: string;
   deleted_at: string;
 }
+
+export interface Address {
+  id_address: number;
+  id_user: string;
+  province: string;
+  district: string;
+  ward: string;
+  specific_address: string;
+}
