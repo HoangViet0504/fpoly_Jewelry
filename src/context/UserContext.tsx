@@ -40,3 +40,13 @@ export function UserProvider({
 
   return <>{children}</>;
 }
+
+// async function getUserById() {
+//   try {
+//     const response = await FetchParamsHaveToken<{ data: UserDetail }>(
+//       "/getUserAdmin",
+//       Number(user?.id_user)
+//     );
+//     setUserDetail(response.data);
+//   } catch (error) {}
+// }
