@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
-import { Token } from "../../helper/constant";
+import { Token } from "../../common/constant";
 import Cookies from "js-cookie";
 import { ToastMessage } from "../../components/ToastMessage";
 
@@ -17,14 +17,14 @@ export async function Login<T>(email: string, password: string): Promise<T> {
     return response.data;
   } catch (error) {
     console.error("Error in query:", error);
-    throw new Error("Login failed. Please try again later.");
+    throw new Error("Email hoặc mật khẩu không đúng.");
   }
 }
 
-export async function Me<T>(token: string): Promise<T> {
+export async function Me<T>(url: string): Promise<T> {
   try {
-    const response = await RestApi.get<T>("/auth/me", {
-      headers: { Authorization: `Bearer ${token}` },
+    const response = await RestApi.get<T>(url, {
+      headers: { Authorization: `Bearer ${Cookies.get(Token)}` },
     });
     return response.data;
   } catch (error) {
@@ -66,13 +66,11 @@ export async function DeleteItemHaveToken<T>(
 
 export async function PostNoToken<T>(url: string, params: unknown): Promise<T> {
   try {
-    const response = await RestApi.post<T>(url, params, {});
+    const response = await RestApi.post<T>(url, params);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      ToastMessage("error", error.response.data.message);
-    }
-    throw new Error("Query failed. Please try again later.");
+    console.log(error);
+    throw new Error("Query By Id Failed. Please try again later.");
   }
 }
 

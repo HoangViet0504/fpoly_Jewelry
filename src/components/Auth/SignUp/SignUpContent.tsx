@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Container from "../../Container";
-import { paths } from "../../../helper/constant";
+import { paths } from "../../../common/constant";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { PostNoToken } from "../../../api/utils/axios";
+import { RestApi } from "../../../api/utils/axios";
 import { ToastMessage } from "../../ToastMessage";
 import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -43,19 +43,23 @@ export default function SignUpContent(): React.ReactElement {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const result = await PostNoToken<{ message: string }>("auth/register", {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          phone: values.phone,
-          email: values.email,
-          password: values.password,
-          confirm_password: values.confirm_password,
-        });
-        ToastMessage("success", result.message);
+        const result = await RestApi.post<{ message: string }>(
+          "auth/register",
+          {
+            first_name: values.first_name,
+            last_name: values.last_name,
+            phone: values.phone,
+            email: values.email,
+            password: values.password,
+            confirm_password: values.confirm_password,
+          }
+        );
+        ToastMessage("success", result.data.message);
         navigate(paths.auth.signIn, { replace: true });
-      } catch (error) {
-        // ToastMessage("error", error as string);
-        // console.log(error);
+      } catch (error: any) {
+        // Kiểm tra nếu server trả về lỗi với message cụ thể
+        const message = error?.response?.data?.message;
+        ToastMessage("error", message);
       } finally {
         setLoading(false);
       }
@@ -316,7 +320,7 @@ export default function SignUpContent(): React.ReactElement {
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     {loading ? (
-                      <CircularProgress sx={{ color: "#fff" }} size="30px" />
+                      <CircularProgress sx={{ color: "#fff" }} size="20px" />
                     ) : (
                       "Đăng ký"
                     )}

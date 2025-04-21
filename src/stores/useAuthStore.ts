@@ -1,14 +1,14 @@
 import { create } from "zustand";
-import { User } from "../types/interface";
+import { UserDetail } from "../types/interface";
 
 interface AuthState {
-  user?: User | undefined;
+  user?: UserDetail | undefined;
   error?: string | undefined;
   isLoading: boolean;
 }
 
 interface Action {
-  setUser: (me: User | undefined) => void;
+  setUser: (me: UserDetail | undefined) => void;
   setIsLoading: (isLoading: boolean) => void;
   setError: (err: string) => void;
 }

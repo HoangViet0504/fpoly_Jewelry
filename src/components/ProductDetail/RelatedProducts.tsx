@@ -1,11 +1,27 @@
 import React from "react";
-import { productsTab1 } from "../../helper/constant";
 import CardItem from "../CardItem";
+import { Product } from "../../types/interface";
+import NoContent from "../NoContent/NoContent";
 
-export default function RelatedProducts(): React.ReactElement {
+interface ProductProps {
+  data: Product[];
+}
+export default function RelatedProducts({
+  data,
+}: ProductProps): React.ReactElement {
   return (
-    <div className="p-10  text-white relative">
-      <CardItem style={{ height: "440px" }} data={productsTab1} />
+    <div>
+      <p style={{ fontSize: "1.5rem", color: "#000", fontWeight: 600 }}>
+        {" "}
+        Sản phẩm cùng loại
+      </p>
+      <div className="p-10  text-white relative">
+        {data.length !== 0 ? (
+          <CardItem data={data} />
+        ) : (
+          <NoContent text="Không có sản phẩm cùng loại" />
+        )}
+      </div>
     </div>
   );
 }

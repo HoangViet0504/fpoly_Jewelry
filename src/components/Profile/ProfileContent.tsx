@@ -7,10 +7,10 @@ const ProfileContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState("info");
 
   const sidebarItems = [
-    { id: "info", label: "Information" },
-    { id: "orders", label: "Order History" },
-    { id: "password", label: "Change Password" },
-    { id: "logout", label: "Logout" },
+    { id: "info", label: "Thông tin" },
+    { id: "orders", label: "Lịch sử đơn hàng" },
+    { id: "password", label: "Đổi mật khẩu" },
+    // { id: "logout", label: "Logout" },
   ];
 
   return (

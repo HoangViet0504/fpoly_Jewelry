@@ -4,7 +4,6 @@ import { useState } from "react";
 import DropDownHandle from "../DropDownHandle";
 import ConfirmDeleted from "../../Dialog/ConfirmDeleted";
 import CreateProduct from "./CreateProduct";
-import { productsTab1 } from "../../../helper/constant";
 <svg
   xmlns="http://www.w3.org/2000/svg"
   className="h-5 w-5"
@@ -197,7 +196,7 @@ export default function TableProduct() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {productsTab1.map((product, index) => (
+                    {/* {productsTab1.map((product, index) => (
                       <tr key={product.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
@@ -272,7 +271,7 @@ export default function TableProduct() {
                           />
                         </td>
                       </tr>
-                    ))}
+                    ))} */}
                   </tbody>
                 </table>
               </div>

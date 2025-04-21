@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { ProductDetail } from "../../types/interface";
 
-const ProductDescription = ({
-  onShowReviews,
-}: {
+interface ReviewProps {
+  data?: ProductDetail;
   onShowReviews: () => void;
-}) => {
+}
+const ProductDescription = ({ onShowReviews, data }: ReviewProps) => {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Button switch */}
@@ -22,10 +23,8 @@ const ProductDescription = ({
 
       {/* Nội dung mô tả */}
       <div className="mt-6 text-black text-sm">
-        <p className="mb-2">
-          Tên sản phẩm: Nhẫn Bạc S925 Mafi Lotus Ring Helios Silver Original
-        </p>
-        <p className="mb-2">Chất liệu: Bạc S925</p>
+        <p className="mb-2">Tên sản phẩm: {data?.name_product}</p>
+        <p className="mb-2">Chất liệu: {data?.made}</p>
         <p className="mb-2">Loại đá sử dụng: Không</p>
         <p className="mb-4">
           Bảo hành: Theo chính sách bảo hành và nhận đánh sáng sản phẩm trọn đời
@@ -35,10 +34,7 @@ const ProductDescription = ({
           ĐẰNG SAU MỖI CHẾ TÁC LUÔN LÀ MỘT CÂU CHUYỆN RIÊNG BIỆT...
         </h3>
 
-        <p className="leading-relaxed">
-          Mafi đánh dấu sự trở lại của dòng nhẫn signet tại Helios - biểu tượng
-          của quyền lực, địa vị và trường tồn.
-        </p>
+        <p className="leading-relaxed">{data?.description}</p>
       </div>
     </div>
   );

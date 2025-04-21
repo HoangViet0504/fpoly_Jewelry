@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Container from "../../Container";
-import { paths } from "../../../helper/constant";
+import { paths } from "../../../common/constant";
 import { Login } from "../../../api/utils/axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -8,6 +8,9 @@ import { User } from "../../../types/interface";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { fetchUser } from "../../../context/UserContext";
+import { useAuthStore } from "../../../stores/useAuthStore";
+import { ToastMessage } from "../../ToastMessage";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -18,12 +21,11 @@ const validationSchema = Yup.object({
     ),
   password: Yup.string().required("Mật khẩu không được rỗng"),
 });
-interface SignInContentProps {
-  data: User;
-}
+
 export default function SignInContent(): React.ReactElement {
   const [checkPassword, setCheckPassword] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { setUser, setIsLoading } = useAuthStore();
   const [loading, setLoading] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: {
@@ -34,16 +36,22 @@ export default function SignInContent(): React.ReactElement {
     onSubmit: async (value) => {
       setLoading(true);
       try {
-        const responseUser: SignInContentProps =
-          await Login<SignInContentProps>(value.email, value.password);
+        const responseUser = await Login<{ data: User; message: string }>(
+          value.email,
+          value.password
+        );
         Cookies.set("access-token", responseUser.data.access_token, {
           expires: 30,
         });
-
         navigate(paths.home, { replace: true });
-        setLoading(false);
+        fetchUser(setUser, setIsLoading);
       } catch (error) {
-        console.error("Login failed:", error);
+        if (error instanceof Error) {
+          ToastMessage("error", error.message);
+        } else {
+          console.error("Login failed:", error);
+        }
+        // ToastMessage("error",error.mes)
         setLoading(false);
       }
     },
@@ -248,7 +256,7 @@ export default function SignInContent(): React.ReactElement {
                       className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       {loading ? (
-                        <CircularProgress sx={{ color: "#fff" }} size="30px" />
+                        <CircularProgress sx={{ color: "#fff" }} size="20px" />
                       ) : (
                         "Đăng nhập"
                       )}

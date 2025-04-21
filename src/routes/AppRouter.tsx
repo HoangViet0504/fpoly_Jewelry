@@ -28,8 +28,11 @@ const AppRouter = () => (
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/product-categories" element={<ProductByCategoriesPage />} />
-      <Route path="/product-detail" element={<ProductDetailPage />} />
+      <Route
+        path="/product-categories/:slug"
+        element={<ProductByCategoriesPage />}
+      />
+      <Route path="/product-detail/:slug" element={<ProductDetailPage />} />
       <Route path="/dashboard/over-view" element={<OverViewPage />} />
       <Route path="/dashboard/manage-user" element={<UserPage />} />
       <Route path="/dashboard/manage-product" element={<ProductPage />} />

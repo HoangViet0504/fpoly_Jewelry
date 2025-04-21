@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { ProductDetail } from "../../types/interface";
 
-export default function ProductDetail() {
+interface ProductDetailProps {
+  data: ProductDetail;
+}
+export default function ProductInfo({
+  data,
+}: ProductDetailProps): React.ReactElement {
   const product = {
     name: "Torua Helios Black Silver",
     price: "1.750.000 VND",
@@ -43,19 +49,17 @@ export default function ProductDetail() {
           {/* Ảnh chính */}
           <img
             className="w-[450px] h-[450px] object-cover rounded-lg border border-gray-700 shadow-lg"
-            src={selectedImage}
+            src={data.primary_image}
             alt="product"
           />
         </div>
 
         {/* Thông tin sản phẩm */}
         <div className="w-1/2 space-y-4">
-          <p className="text-sm text-gray-400">Poly Jewelry</p>
-          <h2 className="text-3xl font-bold">{product.name}</h2>
-          <p className="text-2xl text-yellow-500 font-semibold">
-            {product.price}
-          </p>
-          <p className="text-sm">{product.purchases} lượt mua</p>
+          <p className="text-sm text-gray-400">{data.name}</p>
+          <h2 className="text-3xl font-bold">{data.name_product}</h2>
+          <p className="text-2xl text-yellow-500 font-semibold">{data.price}</p>
+          <p className="text-sm">{data.sale_quantity} lượt mua</p>
 
           {/* Chọn size */}
           <p className="text-sm">
@@ -78,7 +82,7 @@ export default function ProductDetail() {
             ))}
           </div>
 
-          <p className="text-sm">Số lượng trong kho: {product.stock} chiếc</p>
+          <p className="text-sm">Số lượng trong kho: {data.quantity} chiếc</p>
 
           {/* Chọn số lượng */}
           <div className="flex items-center gap-4">

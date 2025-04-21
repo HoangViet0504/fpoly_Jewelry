@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Container from "../Container";
-import { paths } from "../../helper/constant";
+import { paths } from "../../common/constant";
 
 import DropDownUser from "../dropDown/DropDownUser";
 import { GetList } from "../../api/utils/axios";
@@ -107,7 +107,7 @@ const GuestHeader: React.FC = () => {
               {listCategories.map((item) => (
                 <a
                   key={item.name}
-                  // href={item.href}
+                  href={paths.productCategories(item.slug)}
                   className="text-base font-medium text-white hover:text-gray-300"
                 >
                   {item.name}

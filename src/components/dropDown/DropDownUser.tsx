@@ -1,8 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 
-import { paths, Token } from "../../helper/constant";
+import { paths, Token } from "../../common/constant";
 import { useAuthStore } from "../../stores/useAuthStore";
 import Cookies from "js-cookie";
 
@@ -11,7 +11,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function DropDownUser() {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   return (
     <Menu
       style={{ zIndex: "99999" }}
@@ -121,6 +121,7 @@ export default function DropDownUser() {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       Cookies.remove(Token);
+                      setUser(undefined);
                     }}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { PacmanLoader } from "react-spinners";
-import { paths, Token } from "../../helper/constant";
+import { paths, Token } from "../../common/constant";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 export default function GuestGuard({

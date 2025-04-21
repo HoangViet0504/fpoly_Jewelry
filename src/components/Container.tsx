@@ -13,7 +13,7 @@ export default function Container({ children, sx }: ContainerProps) {
         alignItems: "center",
       }}
     >
-      <div style={{ width: "1180px", ...sx }}>{children}</div>
+      <div style={{ width: "1180px", height: "100%", ...sx }}>{children}</div>
     </div>
   );
 }

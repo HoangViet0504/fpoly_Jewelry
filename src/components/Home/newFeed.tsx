@@ -1,6 +1,5 @@
 import React from "react";
 import CardItem from "../CardItem";
-import { productsTab2 } from "../../helper/constant";
 import Container from "../Container";
 
 export default function NewFeed(): React.ReactElement {
@@ -13,9 +12,7 @@ export default function NewFeed(): React.ReactElement {
             Xem tất cả
           </a>
         </div>
-        <div>
-          <CardItem data={productsTab2} />
-        </div>
+        <div>{/* <CardItem data={productsTab2} /> */}</div>
       </div>
     </Container>
   );

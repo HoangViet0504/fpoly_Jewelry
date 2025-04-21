@@ -3,8 +3,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import SwiperCardItem from "../SwiperCardItem";
 import Container from "../Container";
-import { useState } from "react";
-import { productsTab1, productsTab2 } from "../../helper/constant";
+import { useEffect, useState } from "react";
+import { RestApi } from "../../api/utils/axios";
 
 const arrTab: TabItemProps[] = [
   { id: 1, name: "Sản phẩm mới" },
@@ -14,6 +14,28 @@ const arrTab: TabItemProps[] = [
 export default function TabItem() {
   const [currentTab, setCurrentTab] = useState<number>(1);
   const [isHover, setIsHover] = useState<number>(0);
+  const [productSale, setProductSale] = useState<Product[]>([]);
+  const [productCreate, setProductCreate] = useState<Product[]>([]);
+  const fetchProductSale = async () => {
+    try {
+      const response = await RestApi.get("/getListProductsSaleDescClient");
+      setProductSale(response.data.data);
+    } catch (error: any) {
+      console.log(error.response.data.message);
+    }
+  };
+  const fetchProductCreate = async () => {
+    try {
+      const response = await RestApi.get("/getListProductsCreateDescClient");
+      setProductCreate(response.data.data);
+    } catch (error: any) {
+      console.log(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    fetchProductSale();
+    fetchProductCreate();
+  }, []);
   return (
     <Container>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -59,9 +81,9 @@ export default function TabItem() {
           ))}
         </div>
         {currentTab === 1 ? (
-          <SwiperCardItem data={productsTab1} />
+          <SwiperCardItem data={productCreate} />
         ) : (
-          <SwiperCardItem data={productsTab2} />
+          <SwiperCardItem data={productSale} />
         )}
       </div>
     </Container>

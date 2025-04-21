@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { RestApi } from "../../api/utils/axios";
 
 const orders = [
   {
@@ -64,6 +65,23 @@ const orders = [
   // More orders...
 ];
 export default function HistoryOrder(): React.ReactElement {
+  const [isLoading, setIsLoafing] = useState(true);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await RestApi.get("getListOrdersClient");
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoafing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
   return (
     <div className="bg-white">
       <div className=" py-4">
@@ -72,11 +90,11 @@ export default function HistoryOrder(): React.ReactElement {
             id="your-orders-heading"
             className="text-3xl font-extrabold tracking-tight text-gray-900"
           >
-            Your Orders
+            Lịch sử đơn hàng
           </h1>
           <p className="mt-2 text-sm text-gray-500">
-            Check the status of recent orders, manage returns, and discover
-            similar products.
+            Kiểm tra trạng thái đơn hàng gần đây, quản lý trả hàng và các sản
+            phẩm tương tự.
           </p>
         </div>
 
@@ -91,7 +109,7 @@ export default function HistoryOrder(): React.ReactElement {
                   id={`${order.number}-heading`}
                   className="text-lg font-medium text-gray-900 md:flex-shrink-0"
                 >
-                  Order #{order.number}
+                  Mã đơn hàng #{order.number}
                 </h2>
                 <div className="space-y-5 md:flex-1 md:min-w-0 sm:flex sm:items-baseline sm:justify-between sm:space-y-0">
                   <p className="text-sm font-medium text-gray-500">

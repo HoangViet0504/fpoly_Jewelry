@@ -1,5 +1,5 @@
 import React from "react";
-import { paths } from "../../helper/constant";
+import { paths } from "../../common/constant";
 
 export default function NotFoundPage(): React.ReactElement {
   return (

@@ -11,7 +11,7 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
-import { paths } from "../../../helper/constant";
+import { paths } from "../../../common/constant";
 import { useLocation } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/solid";
 import { useFilterDashboard } from "../../../stores/useFilterDashboard";
