@@ -10,6 +10,7 @@ export interface Product {
   sale_quantity: number;
   likes: number;
   made: string;
+  size: string;
   primary_image: string;
   id_category: number;
   id_collection: number;
@@ -30,7 +31,7 @@ export interface User {
   first_name: string;
   email: string;
   phone: string;
-  avatarImage: string;
+  avatar_img: string;
   role: number;
   password: string;
   birthdate: string;
@@ -88,12 +89,13 @@ export interface ward {
 export interface Categories {
   id_categories: string;
   name: string;
-  status: boolean;
+  status: string;
   is_deleted: boolean;
-  slug: string;
+  slug_categories: string;
   image_categories: string;
   created_at: string;
   deleted_at: string;
+  type: string;
 }
 
 export interface Address {
@@ -123,6 +125,8 @@ export interface ProductDetail {
   name: string;
   name_product: string;
   slug: string;
+  listImage: string[];
+  slug_categories: string;
   description: string;
   short_description: string;
   price: string;
@@ -131,6 +135,7 @@ export interface ProductDetail {
   sale_quantity: number;
   likes: number;
   made: string;
+  size: string;
   type: string;
   image: string | null;
   primary_image: string;
@@ -139,4 +144,74 @@ export interface ProductDetail {
   status: string; // hoặc boolean nếu bạn muốn convert
   created_at: string;
   deleted_at: string | null;
+}
+
+export interface Comment {
+  id: number;
+  id_product: number;
+  id_user: string;
+  content: string;
+  rating: number;
+  created_at: string;
+  updated_at: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface CartItem {
+  id_product: number;
+  id_user?: string;
+  quantity: number;
+  made: string;
+  size?: string;
+  total: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ItemCart {
+  id_cart?: number;
+  id_product: number;
+  id_user?: string;
+  image_product: string;
+  name_product: string;
+  price: number;
+  price_sale: number;
+  slug: string;
+  quantity: number;
+  made: string;
+  size?: string;
+  total: number;
+  created_at?: string;
+}
+
+export interface ProductInfo {
+  name_product: string;
+  price: number;
+  quantity: number;
+  size: string;
+  slug: string;
+  made: string;
+  primary_image: string;
+}
+
+export interface MergedOrder {
+  id: number;
+  id_order: number;
+  status: string;
+  id_user: number;
+  email: string;
+  slug: string;
+  payment_method: string;
+  name: string;
+  note: string;
+  discount: number;
+  phone: string;
+  total_amount: number;
+  address: string[]; // danh sách địa chỉ (mỗi đơn hàng có thể có nhiều địa chỉ khác nhau)
+  products: ProductInfo[];
+}
+
+export interface favorite {
+  id_product: number;
 }

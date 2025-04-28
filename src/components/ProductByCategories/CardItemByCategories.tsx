@@ -1,9 +1,12 @@
-import React from "react";
-import { Product } from "../../types/interface";
-import { formatCurrencyVND } from "../../common/helper";
+import React, { useEffect, useState } from "react";
+import { favorite, Product } from "../../types/interface";
+import { addFavorite, addToCart, formatCurrencyVND } from "../../common/helper";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { paths } from "../../common/constant";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { RestApi } from "../../api/utils/axios";
+import { ToastMessage } from "../ToastMessage";
 
 interface ProductProps {
   data?: Product[];
@@ -14,6 +17,29 @@ export default function CardItemByCategories({
   data,
   loading,
 }: ProductProps): React.ReactElement {
+  const { user } = useAuthStore();
+  const [listFavorite, setListFavorite] = useState<favorite[]>([]);
+  const fetchFavorite = async () => {
+    try {
+      const response = await RestApi.get("/getProductFavorite", {
+        params: {
+          id_user: user?.id_user,
+        },
+      });
+      console.log(response.data.data);
+
+      setListFavorite(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id_user) {
+      fetchFavorite();
+    }
+  }, [user?.id_user]);
+
   return (
     <div>
       {loading ? (
@@ -44,7 +70,7 @@ export default function CardItemByCategories({
                 <div className="group relative">
                   {/* Hình ảnh */}
                   <div
-                    style={{ height: "200px" }}
+                    style={{ height: "230px", position: "relative" }}
                     className="aspect-w-3 aspect-h-4 bg-gray-200"
                   >
                     <img
@@ -57,6 +83,52 @@ export default function CardItemByCategories({
                       alt={product.primary_image}
                       className="w-full h-full object-cover"
                     />
+                    <div style={{ position: "absolute", top: 5, right: 10 }}>
+                      {listFavorite.some(
+                        (item) => item.id_product === product.id
+                      ) ? (
+                        <FavoriteBorderIcon
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addFavorite(
+                              user?.id_user!,
+                              String(product.id),
+                              setListFavorite
+                            );
+                          }}
+                          sx={{
+                            color: "red",
+                            "&:hover": {
+                              color: "red",
+                            },
+                          }}
+                        />
+                      ) : (
+                        <FavoriteBorderIcon
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (user?.id_user) {
+                              addFavorite(
+                                user?.id_user!,
+                                String(product.id),
+                                setListFavorite
+                              );
+                            } else {
+                              ToastMessage(
+                                "error",
+                                "Vui lòng đăng nhập để thêm sản phẩm yêu thích"
+                              );
+                            }
+                          }}
+                          sx={{
+                            color: "#fff",
+                            "&:hover": {
+                              color: "red",
+                            },
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   {/* Nội dung sản phẩm */}
@@ -122,17 +194,7 @@ export default function CardItemByCategories({
                         </del>
                       )}
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <p>Yêu thích</p>
-                      <FavoriteBorderIcon />
-                    </div>
+
                     <div
                       style={{
                         display: "flex",
@@ -143,24 +205,49 @@ export default function CardItemByCategories({
                       className=" left-0 right-0 flex justify-center gap-4   "
                     >
                       <button
-                        style={{
-                          width: "137.5px",
-                          cursor: "pointer",
-                          background: "#D70707",
+                        onClick={async (e) => {
+                          if (!user) {
+                            e.preventDefault();
+                            addToCart({
+                              id_product: product.id,
+                              size: JSON.parse(product.size)
+                                ? JSON.parse(product.size)[0]
+                                : "",
+                              quantity: 1,
+                              total:
+                                Number(product.price_sale) > 0
+                                  ? Number(product.price_sale) * 1
+                                  : Number(product.price) * 1,
+                              made: product.made,
+                              id_user: undefined,
+                            });
+                          } else {
+                            e.preventDefault();
+                            try {
+                              const response = await RestApi.post(
+                                "/addProductToCart",
+                                {
+                                  id_product: product.id,
+                                  size: JSON.parse(product.size)
+                                    ? JSON.parse(product.size)[0]
+                                    : "",
+                                  quantity: 1,
+                                  made: product.made,
+                                  id_user: user.id_user,
+                                }
+                              );
+                              ToastMessage("success", response.data.message);
+                            } catch (error) {
+                              console.log(error);
+                            }
+                          }
                         }}
-                        className=" text-white px-4 py-2 rounded-md transition-opacity duration-300 hover:opacity-[0.69]"
-                      >
-                        Mua ngay
-                      </button>
-                      <button
-                        style={{
-                          width: "137.5px",
-                          cursor: "pointer",
-                          background: "#4CAF50",
-                        }}
-                        className=" text-white  px-4 py-2 rounded-md transition-opacity duration-300 hover:opacity-[0.69]"
+                        className="border px-3 py-2 w-1/2 rounded-md hover:bg-gray-800 transition cursor-pointer hover:text-white"
                       >
                         Thêm hàng
+                      </button>
+                      <button className="bg-yellow-500 px-3 py-2 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition cursor-pointer">
+                        Mua ngay
                       </button>
                     </div>
                   </div>

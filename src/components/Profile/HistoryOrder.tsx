@@ -1,76 +1,96 @@
 import React, { useEffect, useState } from "react";
 import { RestApi } from "../../api/utils/axios";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { formatCurrencyVND } from "../../common/helper";
+import { paths } from "../../common/constant";
+import { ToastMessage } from "../ToastMessage";
+import ConfirmDeleted from "../Dialog/ConfirmDeleted";
 
-const orders = [
-  {
-    number: "4376",
-    status: "Delivered on January 22, 2021",
-    href: "#",
-    invoiceHref: "#",
-    products: [
-      {
-        id: 1,
-        name: "VÒNG TAY NAM - VÔ THỰC",
-        href: "#",
-        price: "$95.00",
-        color: "Brass",
-        size: '3" x 3" x 3"',
-        imageSrc: "/images/product/sp2-2.webp",
-        imageAlt:
-          "Brass puzzle in the shape of a jack with overlapping rounded posts.",
-      },
-      // More products...
-    ],
-  },
-  {
-    number: "4376",
-    status: "Delivered on January 22, 2021",
-    href: "#",
-    invoiceHref: "#",
-    products: [
-      {
-        id: 1,
-        name: "VÒNG TAY NAM - VÔ THỰC",
-        href: "#",
-        price: "$95.00",
-        color: "Brass",
-        size: '3" x 3" x 3"',
-        imageSrc: "/images/product/sp2-2.webp",
-        imageAlt:
-          "Brass puzzle in the shape of a jack with overlapping rounded posts.",
-      },
-      // More products...
-    ],
-  },
-  {
-    number: "4376",
-    status: "Delivered on January 22, 2021",
-    href: "#",
-    invoiceHref: "#",
-    products: [
-      {
-        id: 1,
-        name: "VÒNG TAY NAM - VÔ THỰC",
-        href: "#",
-        price: "$95.00",
-        color: "Brass",
-        size: '3" x 3" x 3"',
-        imageSrc: "/images/product/sp2-2.webp",
-        imageAlt:
-          "Brass puzzle in the shape of a jack with overlapping rounded posts.",
-      },
-      // More products...
-    ],
-  },
-  // More orders...
-];
+interface ProductInfo {
+  name_product: string;
+  price: number;
+  quantity: number;
+  made: string;
+  size: string;
+  slug: string;
+  primary_image: string;
+}
+
+interface MergedOrder {
+  id: number;
+  id_order: number;
+  id_user: number;
+  note: string;
+  status: string;
+  discount: number;
+  email: string;
+  slug: string;
+  payment_method: string;
+  name: string;
+  phone: string;
+  total_amount: number;
+  address: string[];
+  products: ProductInfo[];
+}
 export default function HistoryOrder(): React.ReactElement {
   const [isLoading, setIsLoafing] = useState(true);
+  const [id, setId] = useState<string>("");
+  const { user } = useAuthStore();
+  const [orderData, setOrderData] = useState<MergedOrder[]>([]);
+  // const [status, setStatus] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const fetchOrders = async () => {
     try {
-      const response = await RestApi.get("getListOrdersClient");
-      console.log(response);
+      const response = await RestApi.get("/getHistoryCart", {
+        params: {
+          id_user: user?.id_user,
+        },
+      });
+
+      const merged: MergedOrder[] = [];
+
+      response.data.data.forEach((item: any) => {
+        const existing = merged.find((e) => e.id_order === item.id_order);
+
+        const productInfo: ProductInfo = {
+          name_product: item.name_product,
+          price: item.price,
+          quantity: item.quantity,
+          made: item.made,
+          size: item.size,
+          slug: item.slug,
+          primary_image: item.primary_image,
+        };
+
+        if (existing) {
+          // Nếu address chưa có thì thêm
+          if (!existing.address.includes(item.address)) {
+            existing.address.push(item.address);
+          }
+
+          existing.products.push(productInfo);
+        } else {
+          merged.push({
+            id: item.id_order,
+            id_order: item.id_order,
+            id_user: item.id_user,
+            note: item.note,
+            status: item.status,
+            discount: item.discount,
+            email: item.email,
+            slug: item.slug,
+            payment_method: item.payment_method,
+            name: item.name,
+            phone: item.phone,
+            total_amount: item.total_amount,
+            address: [item.address],
+            products: [productInfo],
+          });
+        }
+      });
+
+      setOrderData(merged);
     } catch (error) {
       console.log(error);
     } finally {
@@ -81,6 +101,62 @@ export default function HistoryOrder(): React.ReactElement {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const handleCancelOrder = async () => {
+    try {
+      const response = await RestApi.post("/cancelOrder", {
+        id_order: id,
+        id_user: user?.id_user,
+      });
+      const merged: MergedOrder[] = [];
+
+      response.data.data.forEach((item: any) => {
+        const existing = merged.find((e) => e.id_order === item.id_order);
+
+        const productInfo: ProductInfo = {
+          name_product: item.name_product,
+          price: item.price,
+          quantity: item.quantity,
+          made: item.made,
+          size: item.size,
+          slug: item.slug,
+          primary_image: item.primary_image,
+        };
+
+        if (existing) {
+          // Nếu address chưa có thì thêm
+          if (!existing.address.includes(item.address)) {
+            existing.address.push(item.address);
+          }
+
+          existing.products.push(productInfo);
+        } else {
+          merged.push({
+            id: item.id_order,
+            id_order: item.id_order,
+            id_user: item.id_user,
+            note: item.note,
+            status: item.status,
+            discount: item.discount,
+            email: item.email,
+            slug: item.slug,
+            payment_method: item.payment_method,
+            name: item.name,
+            phone: item.phone,
+            total_amount: item.total_amount,
+            address: [item.address],
+            products: [productInfo],
+          });
+        }
+      });
+      setOrderData(merged);
+      ToastMessage("success", response.data.message);
+      setIsOpen(false);
+      setId("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -98,95 +174,141 @@ export default function HistoryOrder(): React.ReactElement {
           </p>
         </div>
 
-        <div className="mt-12 space-y-16 sm:mt-16">
-          {orders.map((order) => (
+        <div className="mt-12 space-y-6 sm:mt-16">
+          {orderData.map((order) => (
             <section
-              key={order.number}
-              aria-labelledby={`${order.number}-heading`}
+              key={order.id_order}
+              aria-labelledby={`${order.id_order}-heading`}
+              className="border border-gray-200 rounded-lg shadow-sm p-6"
             >
-              <div className="space-y-1 md:flex md:items-baseline md:space-y-0 md:space-x-4">
+              <div className="flex justify-between items-center">
                 <h2
-                  id={`${order.number}-heading`}
-                  className="text-lg font-medium text-gray-900 md:flex-shrink-0"
+                  id={`${order.id_order}-heading`}
+                  className="text-lg font-semibold text-gray-900"
                 >
-                  Mã đơn hàng #{order.number}
+                  Mã đơn hàng #{order.id_order}
                 </h2>
-                <div className="space-y-5 md:flex-1 md:min-w-0 sm:flex sm:items-baseline sm:justify-between sm:space-y-0">
-                  <p className="text-sm font-medium text-gray-500">
-                    {order.status}
-                  </p>
-                  <div className="flex text-sm font-medium">
-                    <a
-                      href={order.href}
-                      className="text-indigo-600 hover:text-indigo-500"
+                <p
+                  className={`text-sm font-medium px-2 py-1 rounded ${
+                    order.status === "paying"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : order.status === "new"
+                      ? "bg-blue-100 text-blue-800"
+                      : order.status === "shipping"
+                      ? "bg-indigo-100 text-indigo-800"
+                      : order.status === "success"
+                      ? "bg-green-100 text-green-800"
+                      : order.status === "cancel"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {order.status === "paying"
+                    ? "Đang thanh toán"
+                    : order.status === "new"
+                    ? "Đang xử lý"
+                    : order.status === "shipping"
+                    ? "Đang giao"
+                    : order.status === "success"
+                    ? "Thành công"
+                    : order.status === "cancel"
+                    ? "Hủy đơn"
+                    : "Không rõ"}
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-gray-500">
+                Địa chỉ: {order.address.join(", ")}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Ghi chú: {order.note || "Không có ghi chú"}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Tổng tiền: {formatCurrencyVND(order.total_amount)}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Giảm giá: {formatCurrencyVND(order.discount)}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Phí ship: {"Miễn phí"}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Phương thức thanh toán: {order.payment_method}
+              </p>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
+                  onClick={() =>
+                    document
+                      .getElementById(`products-${order.id_order}`)
+                      ?.classList.toggle("hidden")
+                  }
+                >
+                  Xem sản phẩm
+                </button>
+              </div>
+              <div className="mt-4">
+                <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                  {(order.status === "new" || order.status === "paying") && (
+                    <button
+                      onClick={() => {
+                        setIsOpen(true);
+                        setId(order.id_order.toString());
+                      }}
+                      type="button"
+                      style={{ maxWidth: "150px" }}
+                      className="mt-2  w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
                     >
-                      Manage order
-                    </a>
-                    <div className="border-l border-gray-200 ml-4 pl-4 sm:ml-6 sm:pl-6">
-                      <a
-                        href={order.invoiceHref}
-                        className="text-indigo-600 hover:text-indigo-500"
-                      >
-                        View Invoice
-                      </a>
-                    </div>
-                  </div>
+                      Hủy đơn hàng
+                    </button>
+                  )}
                 </div>
               </div>
-
-              <div className="mt-6 -mb-6 flow-root border-t border-gray-200 divide-y divide-gray-200">
-                {order.products.map((product) => (
-                  <div
-                    style={{ borderRadius: "6px", cursor: "pointer" }}
-                    key={product.id}
-                    className="py-6 px-3  sm:flex hover:bg-gray-100"
+              <div id={`products-${order.id_order}`} className="mt-6 hidden">
+                {order.products.map((product, index) => (
+                  <a
+                    key={index}
+                    href={paths.productDetail(product.slug)}
+                    className="flex items-center space-x-4 border-t border-gray-200 pt-4 first:border-t-0 first:pt-0 hover:bg-gray-50 rounded-md p-2 transition"
                   >
-                    <div className="flex space-x-4  sm:min-w-0 sm:flex-1 sm:space-x-6 lg:space-x-8">
-                      <img
-                        src={product.imageSrc}
-                        alt={product.imageAlt}
-                        className="flex-none w-20 h-20 rounded-md object-center object-cover sm:w-32 sm:h-32"
-                      />
-                      <div className="pt-1.5 min-w-0 flex-1 sm:pt-0">
-                        <h3 className="text-sm font-medium text-gray-900">
-                          <a href={product.href}>{product.name}</a>
-                        </h3>
-                        <p className="text-sm text-gray-500 truncate">
-                          <span>{product.color}</span>{" "}
-                          <span
-                            className="mx-1 text-gray-400"
-                            aria-hidden="true"
-                          >
-                            &middot;
-                          </span>{" "}
-                          <span>{product.size}</span>
-                        </p>
-                        <p className="mt-1 font-medium text-gray-900">
-                          {product.price}
-                        </p>
-                      </div>
+                    <img
+                      src={product.primary_image}
+                      alt={product.name_product}
+                      className="w-16 h-16 rounded-md object-cover"
+                    />
+                    <div className="flex-1">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {product.name_product}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        kích cỡ: {product.size}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Số lượng: {product.quantity}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Chất liệu: {product.made || "Không rõ"}
+                      </p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Giá: {formatCurrencyVND(product.price)}
+                      </p>
                     </div>
-                    <div className="mt-6 space-y-4 sm:mt-0 sm:ml-6 sm:flex-none sm:w-40">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-center bg-indigo-600 py-2 px-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-full sm:flex-grow-0"
-                      >
-                        Buy again
-                      </button>
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-center bg-white py-2 px-2.5 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-full sm:flex-grow-0"
-                      >
-                        Shop similar
-                      </button>
-                    </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </section>
           ))}
         </div>
       </div>
+      {isOpen && (
+        <ConfirmDeleted
+          open={isOpen}
+          setOpen={setIsOpen}
+          text="Bạn có muốn hủy đơn hàng này không ?"
+          title="Xác nhân hủy đơn hàng"
+          onDelete={handleCancelOrder}
+        />
+      )}
     </div>
   );
 }

@@ -15,6 +15,8 @@ import ProductPage from "../pages/Dashboard/Product/ProductPage";
 import CategoriesPage from "../pages/Dashboard/Categories/CategoriesPage";
 import ProductByCategoriesPage from "../pages/ProductByCategories/ProductByCategoriesPage";
 import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage";
+import SuccessCheckout from "../pages/Checkout/SuccessCheckout";
+import VoucherPage from "../pages/Dashboard/Voucher/VoucherPage";
 
 const AppRouter = () => (
   <Router>
@@ -28,6 +30,7 @@ const AppRouter = () => (
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/checkout-success" element={<SuccessCheckout />} />
       <Route
         path="/product-categories/:slug"
         element={<ProductByCategoriesPage />}
@@ -37,6 +40,7 @@ const AppRouter = () => (
       <Route path="/dashboard/manage-user" element={<UserPage />} />
       <Route path="/dashboard/manage-product" element={<ProductPage />} />
       <Route path="/dashboard/manage-categories" element={<CategoriesPage />} />
+      <Route path="/dashboard/manage-voucher" element={<VoucherPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </Router>

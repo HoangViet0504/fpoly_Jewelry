@@ -1,15 +1,15 @@
 import React from "react";
 import AuthLayout from "../../../components/Dashboard/Layout/AuthLayout";
-import CategoryContent from "../../../components/Dashboard/Category/CategoryContent";
 import { Helmet } from "react-helmet";
+import VoucherCategory from "../../../components/Dashboard/Voucher/TableVoucher";
 
-export default function CategoriesPage(): React.ReactElement {
+export default function VoucherPage(): React.ReactElement {
   return (
     <AuthLayout>
       <Helmet>
-        <title>Danh mục</title>
+        <title>Mã giảm giá</title>
       </Helmet>
-      <CategoryContent />
+      <VoucherCategory />
     </AuthLayout>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Information from "./Information";
 import HistoryOrder from "./HistoryOrder";
 import ChangePassword from "./ChangePassword";
+import Favorite from "./Favorite";
 
 const ProfileContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState("info");
@@ -9,8 +10,8 @@ const ProfileContent: React.FC = () => {
   const sidebarItems = [
     { id: "info", label: "Thông tin" },
     { id: "orders", label: "Lịch sử đơn hàng" },
+    { id: "favorite", label: "Sản phẩm yêu thích" },
     { id: "password", label: "Đổi mật khẩu" },
-    // { id: "logout", label: "Logout" },
   ];
 
   return (
@@ -42,6 +43,8 @@ const ProfileContent: React.FC = () => {
           {activeTab === "info" && <Information />}
           {activeTab === "orders" && <HistoryOrder />}
           {activeTab === "password" && <ChangePassword />}
+          {activeTab === "favorite" && <Favorite />}
+          {/* Add other tab contents here */}
 
           {/* Other tab contents can be added here */}
         </div>

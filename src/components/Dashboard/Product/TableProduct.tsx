@@ -1,17 +1,15 @@
 import { UserIcon } from "@heroicons/react/solid";
 import Navigation from "../../Navigation";
-import CreateUser from "./CreateUser";
 import { useEffect, useState } from "react";
 import DropDownHandle from "../DropDownHandle";
 import ConfirmDeleted from "../../Dialog/ConfirmDeleted";
-import { Meta, province, User, UserDetail } from "../../../types/interface";
-import {
-  DeleteItemHaveToken,
-  GetList,
-  RestApi,
-} from "../../../api/utils/axios";
+import { Categories, Meta } from "../../../types/interface";
+import { RestApi } from "../../../api/utils/axios";
 import { ToastMessage } from "../../ToastMessage";
 import { maxPerSize } from "../../../common/constant";
+import CreateProduct from "./CreateProduct";
+import TrashProduct from "./TrashProduct";
+import { formatCurrencyVND } from "../../../common/helper";
 <svg
   xmlns="http://www.w3.org/2000/svg"
   className="h-5 w-5"
@@ -23,69 +21,70 @@ import { maxPerSize } from "../../../common/constant";
 
 /* This example requires Tailwind CSS v2.0+ */
 
-export default function TableUser() {
+export default function TableProduct() {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const [listUser, setListUser] = useState<User[]>([]);
-  const [idUser, setIdUser] = useState<string>("");
-  const [listProvince, setListProvince] = useState<province[]>([]);
-  // const { filterUser } = useFilterDashboard();
+  const [list, setList] = useState<any[]>([]);
+  const [id, setId] = useState<string>("");
   const [filterKeyWord, setFilterKeyWord] = useState<string>("");
-  const [userDetail, setUserDetail] = useState<UserDetail>({} as UserDetail);
   const [status, setStatus] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-
-  const [role, setRole] = useState<string>("");
+  const [openTrash, setOpenTrash] = useState<boolean>(false);
+  const [type, setType] = useState<string>("");
+  const [idCategories, setIdCategories] = useState<string>("");
   const [meta, setMeta] = useState<Meta>({} as Meta);
+  const [listCategories, setListCategories] = useState<Categories[]>([]);
 
-  async function getListUser() {
+  async function getList() {
     try {
-      const response = await RestApi.get("/getListUserAdmin", {
+      const response = await RestApi.get("/getListProductsAdmin", {
         params: {
           keyword: filterKeyWord,
-          status,
-          role,
+          made: type,
+          id_category: idCategories,
           page,
+          status,
           limit: maxPerSize,
         },
       });
-
-      setListUser(response.data.data as User[]);
+      setList(response.data.data);
       setMeta(response.data.meta as Meta);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function GetProvince() {
+  async function getListCategories() {
     try {
-      const response = await GetList<{ data: province[] }>("/getAllProvince");
-      setListProvince(response.data);
-    } catch (error) {}
+      const response = await RestApi.get("/getListCategories");
+      setListCategories(response.data.data as Categories[]);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
-    GetProvince();
+    getListCategories();
   }, []);
-
   useEffect(() => {
-    getListUser();
-  }, [filterKeyWord, status, role, page]);
+    getList();
+  }, [filterKeyWord, status, type, page, idCategories]);
 
   const handleDelete = async () => {
     try {
-      const response = await DeleteItemHaveToken<{ message: string }>(
-        "/DeleteUserAdminByIsDelete",
-        { id_user: idUser }
-      );
+      const response = await RestApi.post("/DeleteProductsAdminByIsDelete", {
+        id: id,
+      });
       if (response) {
         setOpenDelete(false);
-        ToastMessage("success", response.message);
-        setListUser((item) => item.filter((user) => user.id_user !== idUser));
-        setIdUser("");
+        ToastMessage("success", response.data.message);
+        setList((item) => item.filter((item1) => item1.id !== id));
+        setId("");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -109,23 +108,40 @@ export default function TableUser() {
                 }}
               >
                 <option value="">Tất cả trạng thái</option>
-                <option value="1">Hoạt động</option>
-                <option value="0">Tạm khóa</option>
+                <option value="active">Hoạt động</option>
+                <option value="inactive">Tạm khóa</option>
               </select>
               <select
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 style={{ paddingRight: "10px" }}
                 onChange={(e) => {
-                  setRole(e.target.value);
+                  setType(e.target.value);
                 }}
               >
-                <option value="">Quyền</option>
-                <option value="1">Quản lý</option>
-                <option value="2">Khách hàng</option>
+                <option value="">Chất liệu</option>
+                <option value="gold">Vàng</option>
+                <option value="silver">Bạc</option>
+                <option value="platinum">Bạch kim</option>
+                <option value="other">Khác</option>
+              </select>
+              <select
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                style={{ paddingRight: "10px" }}
+                onChange={(e) => {
+                  setIdCategories(e.target.value);
+                }}
+              >
+                <option value="">Loại</option>
+                {listCategories.map((item) => (
+                  <option key={item.id_categories} value={item.id_categories}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
               <button
                 className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 onClick={() => {
+                  setOpenTrash(true);
                   // Add functionality for trash button here
                 }}
               >
@@ -153,12 +169,11 @@ export default function TableUser() {
               onClick={() => {
                 setIsEdit(false);
                 setOpenCreate(true);
-                setUserDetail({} as UserDetail);
               }}
               type="button"
               className="flex items-center px-5 py-2 bg-indigo-600 text-white font-medium rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              <span>Thêm khách hàng</span>
+              <span>Thêm sản phẩm</span>
               <UserIcon className="ml-2 h-5 w-5" aria-hidden="true" />
             </button>
           </div>
@@ -176,25 +191,55 @@ export default function TableUser() {
                       >
                         Số thứ tự
                       </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Mã danh mục
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6  py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Hình sản phẩm
+                      </th>
 
                       <th
                         scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider "
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Họ Tên
+                        Tên sản phẩm
                       </th>
 
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Số điện thoại
+                        số lượng
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Ngày sinh
+                        Giá gốc
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Giá giảm
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Chất liệu
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Kích thước
                       </th>
                       <th
                         scope="col"
@@ -202,93 +247,93 @@ export default function TableUser() {
                       >
                         Trạng thái
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Quyền
-                      </th>
+
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Hành động
                       </th>
-                      {/* <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Edit</span>
-                  </th> */}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {listUser.length !== 0 ? (
-                      listUser.map((person, index) => (
-                        <tr key={person.email}>
+                    {list.length !== 0 ? (
+                      list.map((item, index) => (
+                        <tr key={index}>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
                               {index + 1}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap ">
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.category_name}
+                            </div>
+                          </td>
+                          <td
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            className="px-6 py-4 whitespace-nowrap  "
+                          >
                             <div className="flex items-center ">
-                              <div className="flex-shrink-0 h-10 w-10">
+                              <div className="h-10 w-10">
                                 <img
-                                  className="h-10 w-10 rounded-full"
+                                  className="h-10 w-10 "
                                   src={
-                                    person.avatar_img ??
+                                    item.primary_image ??
                                     "/images/avatar/avatar_default.jpeg"
                                   }
                                   alt=""
                                 />
                               </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {person.first_name} {person.last_name}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  {person.email}
-                                </div>
-                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.name_product}
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.quantity}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {person.phone}
+                              {formatCurrencyVND(item.price)}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {new Date(person.birthdate).toLocaleDateString(
-                                "vi-VN",
-                                {
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                }
-                              )}
+                              {formatCurrencyVND(item.price_sale)}
                             </div>
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.made}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.size}
+                            </div>
+                          </td>
+
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <span
                               className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                person.is_active === 1
+                                item.status === "active"
                                   ? "bg-green-100 text-green-800"
                                   : "bg-red-100 text-red-800"
                               }`}
                             >
-                              {person.is_active === 1
+                              {item.status === "active"
                                 ? "Hoạt động"
                                 : "Tạm khóa"}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                            <span
-                              className={
-                                person.role === 1
-                                  ? "text-green-600"
-                                  : "text-gray-600"
-                              }
-                            >
-                              {person.role === 1 ? "Quản lý" : "Khách hàng"}
                             </span>
                           </td>
 
@@ -297,8 +342,8 @@ export default function TableUser() {
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                           >
                             <DropDownHandle
-                              id={person.id_user}
-                              setId={setIdUser}
+                              id={item.id}
+                              setId={setId}
                               setOpenDelete={setOpenDelete}
                               setOpenForm={setOpenCreate}
                               setIsEdit={setIsEdit}
@@ -308,7 +353,7 @@ export default function TableUser() {
                       ))
                     ) : (
                       <td
-                        colSpan={6} // Số lượng cột phù hợp với bảng
+                        colSpan={11} // Số lượng cột phù hợp với bảng
                         className="px-6 py-4 text-center text-gray-500"
                       >
                         Không có dữ liệu
@@ -320,17 +365,15 @@ export default function TableUser() {
             </div>
           </div>
         </div>
-        {listUser.length !== 0 && (
+        {list.length !== 0 && (
           <Navigation data={meta} page={page} setPage={setPage} />
         )}
       </div>
-      <CreateUser
-        idUser={idUser}
-        userDetail={userDetail}
-        setUserDetail={setUserDetail}
-        listUser={listUser}
-        setListUser={setListUser}
-        province={listProvince}
+      <CreateProduct
+        listCategories={listCategories}
+        id={id}
+        list={list}
+        setList={setList}
         isEdit={isEdit}
         open={openCreate}
         setOpen={setOpenCreate}
@@ -340,6 +383,12 @@ export default function TableUser() {
         text="Bạn có chắc chắn muốn xóa không? Nếu xóa, mục này sẽ được chuyển vào thùng rác và sẽ mất hoàn toàn sau 30 ngày."
         open={openDelete}
         setOpen={setOpenDelete}
+      />
+      <TrashProduct
+        isOpen={openTrash}
+        setIsOpen={setOpenTrash}
+        setListBefore={setList}
+        setMetaBefore={setMeta}
       />
     </>
   );

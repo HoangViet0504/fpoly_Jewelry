@@ -107,7 +107,7 @@ const GuestHeader: React.FC = () => {
               {listCategories.map((item) => (
                 <a
                   key={item.name}
-                  href={paths.productCategories(item.slug)}
+                  href={paths.productCategories(item.slug_categories)}
                   className="text-base font-medium text-white hover:text-gray-300"
                 >
                   {item.name}

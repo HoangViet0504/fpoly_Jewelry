@@ -53,7 +53,7 @@ const navigation = [
   },
   {
     name: "Mã giảm giá",
-    href: "#",
+    href: paths.dashboard.voucher,
     icon: TicketIcon, // Nếu không có thì dùng GiftIcon thay thế
   },
   {
@@ -242,7 +242,7 @@ export default function LeftSideBar({
             <div className="flex-1 px-4 flex justify-between">
               <div className="flex-1 flex">
                 <div className="w-full flex md:ml-0">
-                  <label htmlFor="search-field" className="sr-only">
+                  {/* <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
                   <div className="relative w-full text-gray-400 focus-within:text-gray-600">
@@ -271,7 +271,7 @@ export default function LeftSideBar({
                           : ""
                       }
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="ml-4 flex items-center md:ml-6">

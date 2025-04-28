@@ -45,6 +45,7 @@ export default function SignInContent(): React.ReactElement {
         });
         navigate(paths.home, { replace: true });
         fetchUser(setUser, setIsLoading);
+        ToastMessage("success", responseUser.message);
       } catch (error) {
         if (error instanceof Error) {
           ToastMessage("error", error.message);

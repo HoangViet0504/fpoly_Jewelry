@@ -1,5 +1,5 @@
 import React from "react";
-import TableProduct from "./TableProdudct";
+import TableProduct from "./TableProduct";
 
 export default function ProductContent(): React.ReactElement {
   return (

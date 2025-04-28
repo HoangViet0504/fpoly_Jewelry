@@ -34,6 +34,7 @@ const validationSchema = Yup.object({
   address: Yup.string().required("Địa chỉ là bắt buộc"),
   birthdate: Yup.string().required("Ngày sinh là bắt buộc"),
 });
+
 export default function Information(): React.ReactElement {
   const { user, setUser } = useAuthStore();
 

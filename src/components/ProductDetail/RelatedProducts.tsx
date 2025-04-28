@@ -10,12 +10,11 @@ export default function RelatedProducts({
   data,
 }: ProductProps): React.ReactElement {
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
       <p style={{ fontSize: "1.5rem", color: "#000", fontWeight: 600 }}>
-        {" "}
-        Sản phẩm cùng loại
+        Sản phẩm cùng loại:
       </p>
-      <div className="p-10  text-white relative">
+      <div className="  text-white relative">
         {data.length !== 0 ? (
           <CardItem data={data} />
         ) : (

@@ -22,6 +22,7 @@ export const fetchUser = async (
       setUser(response.data);
     } catch (err) {
       console.log(err);
+      // Cookies.remove(Token);
     }
   } else {
     setUser(undefined);
