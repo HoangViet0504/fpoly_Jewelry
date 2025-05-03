@@ -1,15 +1,15 @@
 import React from "react";
 import AuthLayout from "../../../components/Dashboard/Layout/AuthLayout";
-import ProductContent from "../../../components/Dashboard/Product/ProductContent";
 import { Helmet } from "react-helmet";
+import ImageContent from "../../../components/Dashboard/ImageProduct/ImageContent";
 
-export default function ProductPage(): React.ReactElement {
+export default function ImageProductPage(): React.ReactElement {
   return (
     <AuthLayout>
       <Helmet>
-        <title>Sản phẩm</title>
+        <title>Hình ảnh sản phẩm</title>
       </Helmet>
-      <ProductContent />
+      <ImageContent />
     </AuthLayout>
   );
 }

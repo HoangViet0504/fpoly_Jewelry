@@ -1,4 +1,5 @@
 import React from "react";
+import { paths } from "../../common/constant";
 
 interface NavigationItem {
   name: string;
@@ -7,37 +8,36 @@ interface NavigationItem {
 }
 
 interface Navigation {
-  solutions: NavigationItem[];
   support: NavigationItem[];
-  company: NavigationItem[];
+  solutions: NavigationItem[];
   legal: NavigationItem[];
   social: NavigationItem[];
 }
 
 const navigation: Navigation = {
-  solutions: [
-    { name: "Marketing", href: "#" },
-    { name: "Analytics", href: "#" },
-    { name: "Commerce", href: "#" },
-    { name: "Insights", href: "#" },
-  ],
+  // products: [
+  //   { name: "Sản phẩm mới", href: "#" },
+  //   { name: "Khuyến mãi", href: "#" },
+  //   { name: "Bán chạy", href: "#" },
+  //   { name: "Tất cả sản phẩm", href: "#" },
+  // ],
   support: [
-    { name: "Pricing", href: "#" },
-    { name: "Documentation", href: "#" },
-    { name: "Guides", href: "#" },
-    { name: "API Status", href: "#" },
+    { name: "Hướng dẫn mua hàng", href: "#" },
+    { name: "Chính sách vận chuyển", href: "#" },
+    { name: "Chính sách đổi trả", href: "#" },
+    { name: "Liên hệ hỗ trợ", href: "#" },
   ],
-  company: [
-    { name: "About", href: "#" },
+  solutions: [
+    { name: "Giới thiệu", href: "#" },
     { name: "Blog", href: "#" },
-    { name: "Jobs", href: "#" },
-    { name: "Press", href: "#" },
-    { name: "Partners", href: "#" },
+    { name: "Tuyển dụng", href: "#" },
+    { name: "Đối tác", href: "#" },
   ],
   legal: [
-    { name: "Claim", href: "#" },
-    { name: "Privacy", href: "#" },
-    { name: "Terms", href: "#" },
+    { name: "Chính sách bảo mật", href: paths.policy },
+    { name: "Điều khoản sử dụng", href: paths.policy },
+    { name: "Chính sách thanh toán", href: paths.policy },
+    { name: "Khiếu nại & hoàn tiền", href: paths.policy },
   ],
   social: [
     {
@@ -66,6 +66,15 @@ const navigation: Navigation = {
         </svg>
       ),
     },
+    {
+      name: "Zalo",
+      href: "#",
+      icon: (props) => (
+        <svg fill="currentColor" viewBox="0 0 48 48" {...props}>
+          <path d="M24 2C12.42 2 3 10.42 3 21c0 4.22 1.8 8.08 4.8 11.02L6 44l12.41-5.18C20.33 40.27 22.15 41 24 41c11.58 0 21-8.42 21-20S35.58 2 24 2zM17 20h-2v-6h2v6zm2-6h2v6h-2v-6zm10 0h2v6h-2v-6zm-4 0h2v6h-2v-6zm-2 7h8v2h-8v-2zm6 3h2v2h-2v-2zm-4 0h2v2h-2v-2z" />
+        </svg>
+      ),
+    },
   ],
 };
 
@@ -73,58 +82,27 @@ export default function GuestFooter(): React.ReactElement {
   return (
     <footer className="bg-black" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
-        Footer
+        Chân trang
       </h2>
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+        <div className="xl:grid xl:grid-cols-2 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
             <img
               style={{ borderRadius: "6px" }}
               className=""
               src="/icons/logo/logo.svg"
-              alt="Company name"
+              alt="Tên công ty"
             />
             <p className="text-white text-base">
-              Making the world a better place through constructing elegant
-              hierarchies.
+              Làm cho thế giới trở nên tốt đẹp hơn thông qua việc xây dựng các
+              hệ thống phân cấp tinh tế.
             </p>
-            <div className="flex space-x-6">
-              {navigation.social.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-white hover:text-white"
-                >
-                  <span className="sr-only">{item.name}</span>
-                  {item.icon && (
-                    <item.icon className="h-6 w-6" aria-hidden="true" />
-                  )}
-                </a>
-              ))}
-            </div>
           </div>
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                  Solutions
-                </h3>
-                <ul role="list" className="mt-4 space-y-4">
-                  {navigation.solutions.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        href={item.href}
-                        className="text-base text-white hover:text-gray-400"
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="mt-12 flex justify-between">
+            <div className="md:grid md:grid-cols-3 md:gap-8">
               <div className="mt-12 md:mt-0">
                 <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                  Support
+                  Hỗ trợ
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
                   {navigation.support.map((item) => (
@@ -139,14 +117,12 @@ export default function GuestFooter(): React.ReactElement {
                   ))}
                 </ul>
               </div>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
+              <div className="mt-12 md:mt-0">
                 <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                  Company
+                  Chính sách
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
-                  {navigation.company.map((item) => (
+                  {navigation.legal.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
@@ -158,12 +134,16 @@ export default function GuestFooter(): React.ReactElement {
                   ))}
                 </ul>
               </div>
-              <div className="mt-12 md:mt-0">
+              <div
+                className="
+               mt-12 md:mt-0
+              "
+              >
                 <h3 className="text-sm font-semibold text-white tracking-wider uppercase">
-                  Legal
+                  Giải pháp
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
-                  {navigation.legal.map((item) => (
+                  {navigation.social.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
@@ -180,7 +160,7 @@ export default function GuestFooter(): React.ReactElement {
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-base text-white xl:text-center">
-            &copy; 2020 Workflow, Inc. All rights reserved.
+            &copy; 2020 Workflow, Inc. Mọi quyền được bảo lưu.
           </p>
         </div>
       </div>

@@ -17,6 +17,11 @@ import ProductByCategoriesPage from "../pages/ProductByCategories/ProductByCateg
 import ProductDetailPage from "../pages/ProductDetail/ProductDetailPage";
 import SuccessCheckout from "../pages/Checkout/SuccessCheckout";
 import VoucherPage from "../pages/Dashboard/Voucher/VoucherPage";
+import CommentPage from "../pages/Dashboard/Comment/CommentPage";
+import OrderPage from "../pages/Dashboard/Order/OrderPage";
+import ProductCollectionPage from "../pages/Dashboard/ProductCollection/ProductCollectionPage";
+import ImageProductPage from "../pages/Dashboard/ImageProduct/ImageProductPage";
+import InfoTabsPage from "../pages/InfoTabs/InfoTabsPage";
 
 const AppRouter = () => (
   <Router>
@@ -39,8 +44,20 @@ const AppRouter = () => (
       <Route path="/dashboard/over-view" element={<OverViewPage />} />
       <Route path="/dashboard/manage-user" element={<UserPage />} />
       <Route path="/dashboard/manage-product" element={<ProductPage />} />
+      <Route
+        path="/dashboard/manage-product-collection"
+        element={<ProductCollectionPage />}
+      />
       <Route path="/dashboard/manage-categories" element={<CategoriesPage />} />
       <Route path="/dashboard/manage-voucher" element={<VoucherPage />} />
+      <Route
+        path="/dashboard/manage-image-product"
+        element={<ImageProductPage />}
+      />
+      <Route path="/dashboard/manage-comment" element={<CommentPage />} />
+      <Route path="/dashboard/manage-order" element={<OrderPage />} />
+      <Route path="/policy" element={<InfoTabsPage />} />
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </Router>

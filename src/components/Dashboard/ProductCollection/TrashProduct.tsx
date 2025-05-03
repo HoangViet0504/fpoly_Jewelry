@@ -2,23 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Categories, Meta } from "../../../types/interface";
 import { RestApi } from "../../../api/utils/axios";
 import { ToastMessage } from "../../ToastMessage";
+import { formatCurrencyVND } from "../../../common/helper";
 
 interface ChangeImageProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  setListBefore: (list: Categories[]) => void;
+  setListBefore: (list: any[]) => void;
   setMetaBefore: (meta: Meta) => void;
 }
-export default function TrashCategory({
+export default function TrashProduct({
   isOpen,
   setIsOpen,
   setListBefore,
   setMetaBefore,
 }: ChangeImageProps) {
-  const [list, setList] = useState<Categories[]>([]);
+  const [list, setList] = useState<any[]>([]);
   const fetchData = async () => {
     try {
-      const response = await RestApi.get("/getListCategoriesRemoveAdmin");
+      const response = await RestApi.get("/getListProductsRemoveAdmin");
       setList(response.data.data);
     } catch (error) {
       console.log(error);
@@ -31,11 +32,11 @@ export default function TrashCategory({
   }, [isOpen]);
   const handleRemove = async (id: string) => {
     try {
-      const response = await RestApi.post("/DeleteCategoriesAdmin", {
+      const response = await RestApi.post("/DeleteProductsAdmin", {
         id,
       });
       ToastMessage("success", response.data.message);
-      setList((prev) => prev.filter((item) => item.id_categories !== id));
+      setList((prev) => prev.filter((item) => item.id !== id));
     } catch (error: any) {
       console.log(error);
     }
@@ -43,14 +44,14 @@ export default function TrashCategory({
   const handleRevert = async (id: string) => {
     try {
       const response = await RestApi.post(
-        "/RevertDeleteCategoriesAdminByIsDelete",
+        "/RevertDeleteProductsAdminByIsDelete",
         {
           id,
         }
       );
       setListBefore(response.data.data);
       setMetaBefore(response.data.meta);
-      setList((prev) => prev.filter((item) => item.id_categories !== id));
+      setList((prev) => prev.filter((item) => item.id !== id));
       ToastMessage("success", response.data.message);
     } catch (error) {
       console.log(error);
@@ -81,30 +82,55 @@ export default function TrashCategory({
                       >
                         Số thứ tự
                       </th>
-
-                      <th
-                        scope="col"
-                        className="px-6  py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
-                      >
-                        Hình danh mục
-                      </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Tên danh mục
+                        Mã danh mục
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6  py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Hình sản phẩm
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Tên sản phẩm
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        số lượng
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Slug
+                        Giá gốc
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Loại
+                        Giá giảm
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Chất liệu
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Kích thước
                       </th>
                       <th
                         scope="col"
@@ -119,12 +145,9 @@ export default function TrashCategory({
                       >
                         Hành động
                       </th>
-                      {/* <th scope="col" className="relative px-6 py-3">
-                                   <span className="sr-only">Edit</span>
-                                 </th> */}
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  {/* <tbody className="bg-white divide-y divide-gray-200">
                     {list.length !== 0 ? (
                       list.map((item, index) => (
                         <tr key={index}>
@@ -190,7 +213,7 @@ export default function TrashCategory({
                           >
                             <button
                               onClick={() => {
-                                handleRemove(item.id_categories);
+                                handleRemove(item.id);
                               }}
                               type="button"
                               className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
@@ -199,7 +222,7 @@ export default function TrashCategory({
                             </button>
                             <button
                               onClick={() => {
-                                handleRevert(item.id_categories);
+                                handleRevert(item.id);
                               }}
                               type="button"
                               className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto"
@@ -212,6 +235,120 @@ export default function TrashCategory({
                     ) : (
                       <td
                         colSpan={6} // Số lượng cột phù hợp với bảng
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        Không có dữ liệu
+                      </td>
+                    )}
+                  </tbody> */}
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {list.length !== 0 ? (
+                      list.map((item, index) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {index + 1}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.category_name}
+                            </div>
+                          </td>
+                          <td
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            className="px-6 py-4 whitespace-nowrap  "
+                          >
+                            <div className="flex items-center ">
+                              <div className="h-10 w-10">
+                                <img
+                                  className="h-10 w-10 "
+                                  src={
+                                    item.primary_image ??
+                                    "/images/avatar/avatar_default.jpeg"
+                                  }
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.name_product}
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.quantity}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {formatCurrencyVND(item.price)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {formatCurrencyVND(item.price_sale)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.made}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {item.size}
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <span
+                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                item.status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {item.status === "active"
+                                ? "Hoạt động"
+                                : "Tạm khóa"}
+                            </span>
+                          </td>
+                          <td
+                            style={{ cursor: "pointer", position: "relative" }}
+                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                          >
+                            <button
+                              onClick={() => {
+                                handleRemove(item.id);
+                              }}
+                              type="button"
+                              className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
+                            >
+                              Xóa
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleRevert(item.id);
+                              }}
+                              type="button"
+                              className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto"
+                            >
+                              Khôi phục
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <td
+                        colSpan={11} // Số lượng cột phù hợp với bảng
                         className="px-6 py-4 text-center text-gray-500"
                       >
                         Không có dữ liệu

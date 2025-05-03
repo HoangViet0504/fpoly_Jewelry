@@ -13,8 +13,8 @@ interface NavigationItem {
 
 // Mảng navigation được khai báo với kiểu dữ liệu
 const navigationLeft: NavigationItem[] = [
-  { name: "ABOUT US", href: paths.about },
-  { name: "STORE", href: "#" },
+  { name: "Giới thiệu", href: paths.about },
+  { name: "Chính sách", href: paths.policy },
 ];
 
 const GuestHeader: React.FC = () => {

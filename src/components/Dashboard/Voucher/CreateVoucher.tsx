@@ -6,92 +6,89 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ToastMessage } from "../../ToastMessage";
-import ChangeImage from "../../ChangeImage";
-import { noImage } from "../../../common/constant";
 
-interface CreateProductProps {
+interface CreateVoucherProps {
   open: boolean;
   isEdit: boolean;
   setOpen: (open: boolean) => void;
   list: any[];
   setList: (list: any[]) => void;
-  listCategories: Categories[];
   id: string;
 }
-
-export const validationSchema = Yup.object().shape({
-  name_product: Yup.string()
-    .required("Tên sản phẩm là bắt buộc")
-    .min(2, "Tên sản phẩm phải có ít nhất 2 ký tự")
-    .max(50, "Tên sản phẩm không được quá 50 ký tự"),
-
-  id_categories: Yup.string().required("Mã danh mục là bắt buộc"),
-
-  description: Yup.string().required("Mô tả là bắt buộc"),
-
-  primary_image: Yup.string().required("Hình ảnh là bắt buộc"),
-
-  price: Yup.number()
-    .typeError("Giá phải là số")
-    .required("Giá là bắt buộc")
-    .moreThan(0, "Giá phải lớn hơn 0"),
-
-  quantity: Yup.number()
-    .typeError("Số lượng phải là số")
-    .required("Số lượng là bắt buộc")
-    .moreThan(0, "Số lượng phải lớn hơn 0"),
-
-  price_sale: Yup.number()
-    .typeError("Giá khuyến mãi phải là số")
-    .required("Giá khuyến mãi là bắt buộc")
-    .moreThan(0, "Giá khuyến mãi phải lớn hơn 0")
-    .test(
-      "is-less-than-price",
-      "Giá khuyến mãi phải nhỏ hơn giá gốc",
-      function (value) {
-        const { price } = this.parent;
-        return value < price;
-      }
+const validationSchema = Yup.object({
+  name: Yup.string()
+    .required("Tên danh mục là bắt buộc")
+    .min(2, "Tên danh mục phải có ít nhất 2 ký tự")
+    .max(50, "Tên danh mục không được quá 50 ký tự"),
+  start_date: Yup.date()
+    .required("Ngày bắt đầu là bắt buộc")
+    .min(new Date(), "Ngày bắt đầu không được nhỏ hơn ngày hiện tại"),
+  expires_at: Yup.date()
+    .required("Ngày kết thúc là bắt buộc")
+    .required("Ngày kết thúc là bắt buộc")
+    .min(
+      Yup.ref("start_date"),
+      "Ngày kết thúc không được nhỏ hơn ngày bắt đầu"
     ),
+  coupon_min_spend: Yup.number()
+    .required("Giá trị tối thiểu là bắt buộc")
+    .min(0, "Giá trị tối thiểu không được nhỏ hơn 0"),
+  coupon_max_spend: Yup.number()
+    .required("Giá trị tối đa là bắt buộc")
+    .min(
+      Yup.ref("coupon_min_spend"),
+      "Giá trị tối đa không được nhỏ hơn giá trị tối thiểu"
+    ),
+  discount: Yup.number()
+    .required("Giá trị giảm giá là bắt buộc")
+    .min(0, "Giá trị giảm giá không được nhỏ hơn 0"),
+  quantity: Yup.number()
+    .required("Số lượng là bắt buộc")
+    .min(0, "Số lượng không được nhỏ hơn 0"),
+  description: Yup.string().required("Mô tả là bắt buộc"),
 });
-
-export default function CreateProduct({
+export default function CreateVoucher({
   setOpen,
   open,
   isEdit = false,
   list,
   setList,
   id,
-  listCategories,
-}: CreateProductProps) {
+}: CreateVoucherProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   async function getDetail() {
     try {
-      const response = await RestApi.get("/getProductAdmin", {
+      const response = await RestApi.get("/getVouchersAdmin", {
         params: {
           id: id,
         },
       });
       if (response.data.data) {
-        formik.setFieldValue("name_product", response.data.data.name_product);
-        formik.setFieldValue("primary_image", response.data.data.primary_image);
-        formik.setFieldValue("made", response.data.data.made);
+        formik.setFieldValue("name", response.data.data.code_coupon);
+        console.log(response.data.data.start_date);
 
-        formik.setFieldValue("size", response.data.data.size);
-
-        formik.setFieldValue("quantity", response.data.data.quantity);
-        formik.setFieldValue("price", response.data.data.price);
-        formik.setFieldValue("price_sale", response.data.data.price_sale);
-        formik.setFieldValue("description", response.data.data.description);
         formik.setFieldValue(
-          "short_description",
-          response.data.data.short_description
+          "start_date",
+          response.data.data.start_date.split("T")[0]
         );
-
+        formik.setFieldValue(
+          "expires_at",
+          response.data.data.expires_at.split("T")[0]
+        );
+        formik.setFieldValue(
+          "coupon_min_spend",
+          response.data.data.coupon_min_spend
+        );
+        formik.setFieldValue(
+          "coupon_max_spend",
+          response.data.data.coupon_max_spend
+        );
+        formik.setFieldValue("description", response.data.data.description);
+        formik.setFieldValue("quantity", response.data.data.quantity);
+        formik.setFieldValue("discount", response.data.data.discount);
         formik.setFieldValue("status", response.data.data.status);
-        formik.setFieldValue("id_categories", response.data.data.id_category);
-        formik.setFieldValue("id_collection", response.data.data.id_collection);
+        formik.setFieldValue("type", response.data.data.type_coupon);
       }
     } catch (error) {
       console.log(error);
@@ -102,22 +99,20 @@ export default function CreateProduct({
     if (isEdit && id) {
       getDetail();
     }
-  }, [isEdit, id, open]);
+  }, [isEdit, id]);
 
   const formik = useFormik({
     initialValues: {
-      id_categories: "",
-      id_collection: null,
-      name_product: "",
-      short_description: "",
+      name: "",
+      start_date: "",
+      expires_at: "",
+      coupon_min_spend: "",
+      coupon_max_spend: "",
       description: "",
-      made: "",
+      quantity: "",
+      type: "amount",
+      discount: "",
       status: "active",
-      size: "",
-      primary_image: noImage,
-      price: "",
-      price_sale: "",
-      quantity: 0,
     },
     validationSchema,
     onSubmit: async (value) => {
@@ -125,21 +120,19 @@ export default function CreateProduct({
       if (isEdit) {
         const data = {
           id: id,
-          name: value.name_product,
-          id_categories: value.id_categories,
-          id_collection: value.id_collection,
-          short_description: value.short_description,
+          code_coupon: value.name,
           description: value.description,
+          start_date: value.start_date,
+          expires_at: value.expires_at,
+          coupon_min_spend: value.coupon_min_spend,
+          coupon_max_spend: value.coupon_max_spend,
+          discount: value.discount,
+          type_coupon: value.type,
           quantity: value.quantity,
           status: value.status,
-          primary_image: value.primary_image,
-          price: value.price,
-          price_sale: value.price_sale,
-          made: value.made,
-          size: value.size,
         };
         try {
-          const response = await RestApi.post("/UpdateProductsAdmin", data);
+          const response = await RestApi.post("/UpdateVouchersAdmin", data);
           if (response.data.data) {
             setList([
               response.data.data,
@@ -151,34 +144,29 @@ export default function CreateProduct({
           }
           setLoading(false);
         } catch (error) {
-          console.log(error);
-
           setLoading(false);
         } finally {
           setLoading(false);
         }
       } else {
         const data = {
-          id_categories: value.id_categories,
-          id_collection: value.id_collection,
-          name_product: value.name_product,
-          short_description: value.short_description,
+          code_coupon: value.name,
           description: value.description,
+          start_date: value.start_date,
+          expires_at: value.expires_at,
+          coupon_min_spend: value.coupon_min_spend,
+          coupon_max_spend: value.coupon_max_spend,
+          discount: value.discount,
+          type_coupon: value.type,
           quantity: value.quantity,
           status: value.status,
-          primary_image: value.primary_image,
-          price: value.price,
-          price_sale: value.price_sale,
-          made: value.made,
-          size: JSON.stringify(value.size.split(",").map(String)),
         };
-
         console.log(data);
 
         try {
-          const response = await RestApi.post("/AddProductsAdmin", data);
+          const response = await RestApi.post("/AddVouchersAdmin", data);
           if (response.data.data) {
-            setList(response.data.data);
+            setList([response.data.data, ...list]);
             ToastMessage("success", response.data.message);
             setOpen(false);
             formik.resetForm();
@@ -205,7 +193,7 @@ export default function CreateProduct({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle sx={{ display: "flex", justifyContent: "center" }}>
-        {isEdit ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
+        {isEdit ? "Chỉnh sửa mã giảm giá" : "Thêm mã giảm giá"}
       </DialogTitle>
       <Container sx={{ maxWidth: "700px !important" }}>
         <div className="sm:mt-0 bg-white ">
@@ -215,149 +203,172 @@ export default function CreateProduct({
             <div className="md:col-span-2">
               <form onSubmit={formik.handleSubmit}>
                 <div className="shadow overflow-hidden sm:rounded-md">
-                  <div
-                    style={{
-                      marginTop: "20px",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                    className="px-4 bg-white  "
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                      }}
-                    >
-                      <label className="block text-sm font-medium text-gray-700 text-center">
-                        Hình
-                      </label>
-                      <div className="mt-1 flex items-center">
-                        <ChangeImage
-                          isRadius={false}
-                          imageUrl={formik.values.primary_image}
-                          setImageUrl={(url) =>
-                            formik.setFieldValue("primary_image", url)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
                   <div className="px-4 py-5 bg-white sm:p-6">
                     <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-6  sm:col-span-3">
+                      <div className="col-span-6 sm:col-span-3 ">
                         <label
                           htmlFor="first-name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Tên sản phẩm
+                          Code khuyến mãi
                         </label>
                         <input
-                          placeholder="Vui lòng nhập tên sản phẩm"
+                          placeholder="Vui lòng nhập code khuyến mãi"
                           onChange={formik.handleChange}
-                          value={formik.values.name_product}
+                          value={formik.values.name}
                           onBlur={formik.handleBlur}
                           type="text"
-                          name="name_product"
+                          name="name"
                           id="first-name"
                           autoComplete="given-name"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
                         />
-                        {formik.touched.name_product &&
-                          formik.errors.name_product && (
-                            <p className="text-red-500 text-sm">
-                              {formik.errors.name_product}
-                            </p>
-                          )}
-                      </div>
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="first-name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Mô tả ngắn
-                        </label>
-                        <input
-                          placeholder="Vui lòng nhập mô tả ngắn"
-                          onChange={formik.handleChange}
-                          value={formik.values.short_description}
-                          onBlur={formik.handleBlur}
-                          type="text"
-                          name="short_description"
-                          id="first-name"
-                          autoComplete="given-name"
-                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
-                        />
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="last-name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Giá gốc
-                        </label>
-                        <input
-                          type="text"
-                          name="price"
-                          placeholder="Vui lòng nhập giá sản phẩm"
-                          onChange={formik.handleChange}
-                          value={formik.values.price}
-                          onBlur={formik.handleBlur}
-                          id="last_name"
-                          autoComplete="family-name"
-                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
-                        />
-                        {formik.touched.price && formik.errors.price && (
+                        {formik.touched.name && formik.errors.name && (
                           <p className="text-red-500 text-sm">
-                            {formik.errors.price}
+                            {formik.errors.name}
                           </p>
                         )}
                       </div>
-
-                      <div className="col-span-6 sm:col-span-3">
+                      <div className="col-span-6 sm:col-span-3 ">
                         <label
-                          htmlFor="last-name"
+                          htmlFor="first-name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Giá giảm
+                          Giảm giá
                         </label>
                         <input
-                          type="text"
-                          name="price_sale"
-                          placeholder="Vui lòng nhập giá giảm"
+                          placeholder="Vui lòng nhập giảm giá"
                           onChange={formik.handleChange}
-                          value={formik.values.price_sale}
+                          value={formik.values.discount}
                           onBlur={formik.handleBlur}
-                          id="last_name"
-                          autoComplete="family-name"
+                          type="text"
+                          name="discount"
+                          id="first-name"
+                          autoComplete="given-name"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
                         />
-                        {formik.touched.price_sale &&
-                          formik.errors.price_sale && (
+                        {formik.touched.discount && formik.errors.discount && (
+                          <p className="text-red-500 text-sm">
+                            {formik.errors.discount}
+                          </p>
+                        )}
+                      </div>
+                      <div className="col-span-6 sm:col-span-3 ">
+                        <label
+                          htmlFor="first-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Giảm thấp nhất
+                        </label>
+                        <input
+                          placeholder="Vui lòng nhập giảm thấp nhất"
+                          onChange={formik.handleChange}
+                          value={formik.values.coupon_min_spend}
+                          onBlur={formik.handleBlur}
+                          type="text"
+                          name="coupon_min_spend"
+                          id="first-name"
+                          autoComplete="given-name"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
+                        />
+                        {formik.touched.coupon_min_spend &&
+                          formik.errors.coupon_min_spend && (
                             <p className="text-red-500 text-sm">
-                              {formik.errors.price_sale}
+                              {formik.errors.coupon_min_spend}
                             </p>
                           )}
                       </div>
-
-                      <div className="col-span-6 sm:col-span-3">
+                      <div className="col-span-6 sm:col-span-3 ">
                         <label
-                          htmlFor="last-name"
+                          htmlFor="first-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Giảm tối đa
+                        </label>
+                        <input
+                          placeholder="Vui lòng nhập giảm tối đa"
+                          onChange={formik.handleChange}
+                          value={formik.values.coupon_max_spend}
+                          onBlur={formik.handleBlur}
+                          type="text"
+                          name="coupon_max_spend"
+                          id="first-name"
+                          autoComplete="given-name"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
+                        />
+                        {formik.touched.coupon_max_spend &&
+                          formik.errors.coupon_max_spend && (
+                            <p className="text-red-500 text-sm">
+                              {formik.errors.coupon_max_spend}
+                            </p>
+                          )}
+                      </div>
+                      <div className="col-span-6 sm:col-span-3 ">
+                        <label
+                          htmlFor="first-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Ngày bắt đầu
+                        </label>
+                        <input
+                          placeholder="Vui lòng nhập ngày bắt đầu"
+                          onChange={formik.handleChange}
+                          value={formik.values.start_date}
+                          onBlur={formik.handleBlur}
+                          type="date"
+                          name="start_date"
+                          id="first-name"
+                          autoComplete="given-name"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
+                        />
+                        {formik.touched.start_date &&
+                          formik.errors.start_date && (
+                            <p className="text-red-500 text-sm">
+                              {formik.errors.start_date}
+                            </p>
+                          )}
+                      </div>
+                      <div className="col-span-6 sm:col-span-3 ">
+                        <label
+                          htmlFor="first-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Ngày kết thúc
+                        </label>
+                        <input
+                          placeholder="Vui lòng nhập "
+                          onChange={formik.handleChange}
+                          value={formik.values.expires_at}
+                          onBlur={formik.handleBlur}
+                          type="date"
+                          name="expires_at"
+                          id="first-name"
+                          autoComplete="given-name"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
+                        />
+                        {formik.touched.expires_at &&
+                          formik.errors.expires_at && (
+                            <p className="text-red-500 text-sm">
+                              {formik.errors.expires_at}
+                            </p>
+                          )}
+                      </div>
+                      <div className="col-span-6 sm:col-span-3 ">
+                        <label
+                          htmlFor="first-name"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Số lượng
                         </label>
                         <input
-                          type="text"
-                          name="quantity"
                           placeholder="Vui lòng nhập số lượng"
                           onChange={formik.handleChange}
                           value={formik.values.quantity}
                           onBlur={formik.handleBlur}
-                          id="last_name"
-                          autoComplete="family-name"
+                          type="text"
+                          name="quantity"
+                          id="first-name"
+                          autoComplete="given-name"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
                         />
                         {formik.touched.quantity && formik.errors.quantity && (
@@ -366,102 +377,9 @@ export default function CreateProduct({
                           </p>
                         )}
                       </div>
-
-                      <div className="col-span-6 sm:col-span-3">
+                      <div className="col-span-6 sm:col-span-3 ">
                         <label
-                          htmlFor="last-name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Kích thược
-                        </label>
-                        <input
-                          type="text"
-                          name="size"
-                          placeholder="Vui lòng nhập kích thước"
-                          onChange={formik.handleChange}
-                          value={formik.values.size}
-                          onBlur={formik.handleBlur}
-                          id="last_name"
-                          autoComplete="family-name"
-                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
-                        />
-                        {/* {formik.touched.size && formik.errors.size && (
-                          <p className="text-red-500 text-sm">
-                            {formik.errors.size}
-                          </p>
-                        )} */}
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="last-name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Nguyên liệu
-                        </label>
-                        <input
-                          type="text"
-                          name="made"
-                          placeholder="Vui lòng nhập kích thước"
-                          onChange={formik.handleChange}
-                          value={formik.values.made}
-                          onBlur={formik.handleBlur}
-                          id="last_name"
-                          autoComplete="family-name"
-                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  shadow-sm sm:text-sm border-gray-300  w-full p-2 border rounded-lg"
-                        />
-                        {/* {formik.touched.size && formik.errors.size && (
-                          <p className="text-red-500 text-sm">
-                            {formik.errors.size}
-                          </p>
-                        )} */}
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="province"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Danh mục
-                        </label>
-                        <select
-                          id="province"
-                          name="id_categories"
-                          value={formik.values.id_categories}
-                          onChange={(e) => {
-                            formik.setFieldValue(
-                              "id_categories",
-                              e.target.value
-                            );
-                          }}
-                          onBlur={formik.handleBlur}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                          <option value="" disabled>
-                            Vui lòng chọn
-                          </option>
-                          {listCategories
-                            .filter((item) => item.type === "category")
-                            .map((item) => (
-                              <option
-                                key={item.id_categories}
-                                value={item.id_categories}
-                              >
-                                {item.name}
-                              </option>
-                            ))}
-                        </select>
-                        {formik.touched.id_categories &&
-                          formik.errors.id_categories && (
-                            <p className="text-red-500 text-sm">
-                              {formik.errors.id_categories}
-                            </p>
-                          )}
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="last-name"
+                          htmlFor="first-name"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Mô tả
@@ -469,7 +387,7 @@ export default function CreateProduct({
                         <textarea
                           id="note"
                           name="description"
-                          rows={4}
+                          rows={2}
                           value={formik.values.description}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
@@ -483,43 +401,6 @@ export default function CreateProduct({
                             </p>
                           )}
                       </div>
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="province"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Bộ sưu tập
-                        </label>
-                        <select
-                          id="province"
-                          name="id_collection"
-                          value={formik.values.id_collection ?? ""}
-                          onChange={(e) => {
-                            console.log(e.target.value);
-
-                            formik.setFieldValue(
-                              "id_collection",
-                              e.target.value
-                            );
-                          }}
-                          onBlur={formik.handleBlur}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                          <option value="" disabled>
-                            Vui lòng chọn
-                          </option>
-                          {listCategories
-                            .filter((item) => item.type === "collection")
-                            .map((item) => (
-                              <option
-                                key={item.id_categories}
-                                value={item.id_categories}
-                              >
-                                {item.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
                     </div>
 
                     <div className=" overflow-hidden sm:rounded-md">
@@ -531,6 +412,47 @@ export default function CreateProduct({
                         }}
                         className="  py-4"
                       >
+                        <fieldset>
+                          <legend className="text-base font-medium text-gray-900">
+                            Loại giảm giá
+                          </legend>
+                          <div className=" mt-2.5 flex flex-row items-center gap-6">
+                            <div className="flex items-center">
+                              <input
+                                id="push-everything"
+                                name="type"
+                                type="radio"
+                                value="percent"
+                                checked={formik.values.type === "percent"}
+                                onChange={formik.handleChange}
+                                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                              />
+                              <label
+                                htmlFor="push-everything"
+                                className="ml-3 block text-sm font-medium text-gray-700"
+                              >
+                                Phần trăm
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                id="push-email"
+                                name="type"
+                                type="radio"
+                                value="amount"
+                                checked={formik.values.type === "amount"}
+                                onChange={formik.handleChange}
+                                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                              />
+                              <label
+                                htmlFor="push-email"
+                                className="ml-3 block text-sm font-medium text-gray-700"
+                              >
+                                Tiền mặt
+                              </label>
+                            </div>
+                          </div>
+                        </fieldset>
                         <fieldset>
                           <div>
                             <legend className="text-base font-medium text-gray-900">

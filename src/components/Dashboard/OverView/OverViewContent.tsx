@@ -1,9 +1,7 @@
 import React from "react";
 import Stats from "./Stats";
-import PotentialUsersChart from "./PotentialUsersChart";
 import RevenueChart from "./Chart";
 import TopProductsBarChart from "./TopProductChart";
-import OrderStatusPieChart from "./PieChart";
 
 export default function OverViewContent(): React.ReactElement {
   return (
@@ -57,7 +55,7 @@ export default function OverViewContent(): React.ReactElement {
             <TopProductsBarChart />
           </div>
         </div>
-        <div style={{ boxShadow: "none" }} className="grid grid-cols-2 gap-4">
+        {/* <div style={{ boxShadow: "none" }} className="grid grid-cols-2 gap-4">
           <div>
             <h2
               style={{
@@ -89,7 +87,7 @@ export default function OverViewContent(): React.ReactElement {
             </p>
             <PotentialUsersChart />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

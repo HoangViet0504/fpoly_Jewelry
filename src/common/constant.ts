@@ -12,6 +12,7 @@ export const paths = {
   checkout_success: "/checkout-success",
   profile: "/profile",
   product: "/product-categories",
+  policy: "/policy",
   productDetail: (slug: string) => `/product-detail/${slug}`,
   productCategories: (slug: string) => `/product-categories/${slug}`,
   dashboard: {
@@ -20,6 +21,10 @@ export const paths = {
     product: "/dashboard/manage-product",
     categories: "/dashboard/manage-categories",
     voucher: "/dashboard/manage-voucher",
+    comment: "/dashboard/manage-comment",
+    order: "/dashboard/manage-order",
+    productCollection: "/dashboard/manage-product-collection",
+    imageProduct: "/dashboard/manage-image-product",
   },
   errors: { notFound: "/not-found" },
 } as const;

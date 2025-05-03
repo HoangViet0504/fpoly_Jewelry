@@ -1,14 +1,11 @@
-import { UserIcon } from "@heroicons/react/solid";
 import Navigation from "../../Navigation";
 import { useEffect, useState } from "react";
-import DropDownHandle from "../DropDownHandle";
 import ConfirmDeleted from "../../Dialog/ConfirmDeleted";
 import { Categories, Meta } from "../../../types/interface";
 import { RestApi } from "../../../api/utils/axios";
 import { ToastMessage } from "../../ToastMessage";
 import { maxPerSize } from "../../../common/constant";
-import { formatCurrencyVND, formatTimeDateVN } from "../../../common/helper";
-import CreateVoucher from "./CreateVoucher";
+import { formatTimeDateVN } from "../../../common/helper";
 <svg
   xmlns="http://www.w3.org/2000/svg"
   className="h-5 w-5"
@@ -20,28 +17,23 @@ import CreateVoucher from "./CreateVoucher";
 
 /* This example requires Tailwind CSS v2.0+ */
 
-export default function TableVoucher() {
-  const [openCreate, setOpenCreate] = useState<boolean>(false);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+export default function TableComment() {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [list, setList] = useState<any[]>([]);
   const [id, setId] = useState<string>("");
   const [filterKeyWord, setFilterKeyWord] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-  const [openTrash, setOpenTrash] = useState<boolean>(false);
-  const [type, setType] = useState<string>("");
   const [meta, setMeta] = useState<Meta>({} as Meta);
 
   async function getListUser() {
     try {
-      const response = await RestApi.get("/getListVouchersAdmin", {
+      const response = await RestApi.get("/getListCommentsAdmin", {
         params: {
-          keyWord: filterKeyWord,
-          status,
-          type_coupon: type,
           page,
           limit: maxPerSize,
+          keyword: filterKeyWord,
+          rate: status,
         },
       });
 
@@ -54,11 +46,11 @@ export default function TableVoucher() {
 
   useEffect(() => {
     getListUser();
-  }, [filterKeyWord, status, type, page]);
+  }, [filterKeyWord, status, page]);
 
   const handleDelete = async () => {
     try {
-      const response = await RestApi.post("/DeleteVouchersAdmin", {
+      const response = await RestApi.post("/DeleteCommentAdmin", {
         id: id,
       });
       if (response) {
@@ -92,21 +84,14 @@ export default function TableVoucher() {
                   setStatus(e.target.value);
                 }}
               >
-                <option value="">Tất cả trạng thái</option>
-                <option value="active">Hoạt động</option>
-                <option value="inactive">Tạm khóa</option>
+                <option value="">Tất cả đánh giá</option>
+                <option value="1">1 sao</option>
+                <option value="2">2 sao</option>
+                <option value="3">3 sao</option>
+                <option value="4">4 sao </option>
+                <option value="5">5 sao</option>
               </select>
-              <select
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                style={{ paddingRight: "10px" }}
-                onChange={(e) => {
-                  setType(e.target.value);
-                }}
-              >
-                <option value="">Loại</option>
-                <option value="amount">Tiền mặt</option>
-                <option value="percent">Phần trăm</option>
-              </select>
+
               {/* <button
                 className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 onClick={() => {
@@ -134,7 +119,7 @@ export default function TableVoucher() {
                 <span>Thùng rác</span>
               </button> */}
             </div>
-            <button
+            {/* <button
               onClick={() => {
                 setIsEdit(false);
                 setOpenCreate(true);
@@ -144,7 +129,7 @@ export default function TableVoucher() {
             >
               <span>Thêm mã giảm giá</span>
               <UserIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="flex flex-col">
@@ -165,60 +150,38 @@ export default function TableVoucher() {
                         scope="col"
                         className="px-6  py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Mã giảm giá
+                        Tên sản phẩm
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Giảm giá
+                        Tên người dùng
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Giảm thấp nhất
+                        Nội dung
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Giảm cao nhất
+                        Đánh giá
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Ngày bắt đầu
+                        Ngày bình luận
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Ngày kết thúc
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Loại
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Trạng thái
-                      </th>
-
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Hành động
                       </th>
-                      {/* <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Edit</span>
-                  </th> */}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -233,70 +196,41 @@ export default function TableVoucher() {
 
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {item.code_coupon}
+                              {item.product_name}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {item.type_coupon === "percent"
-                                ? item.discount + "%"
-                                : formatCurrencyVND(item.discount)}
+                              {item.first_name} {item.last_name}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {formatCurrencyVND(item.coupon_min_spend)}
+                              {item.content}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {formatCurrencyVND(item.coupon_max_spend)}
+                              {item.rating} sao
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {formatTimeDateVN(item.start_date)}
+                              {formatTimeDateVN(item.created_at)}
                             </div>
                           </td>
 
                           <td className="px-6 py-4 whitespace-nowrap text-center">
-                            <div className="text-sm text-gray-900">
-                              {formatTimeDateVN(item.expires_at)}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-center">
-                            <div className="text-sm text-gray-900">
-                              {item.type_coupon === "percent"
-                                ? "Phần trăm"
-                                : "Tiền mặt"}
-                            </div>
-                          </td>
-
-                          <td className="px-6 py-4 whitespace-nowrap text-center">
-                            <span
-                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                item.status === "active"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
+                            <button
+                              onClick={() => {
+                                setId(item.id);
+                                setOpenDelete(true);
+                              }}
+                              type="button"
+                              className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
                             >
-                              {item.status === "active"
-                                ? "Hoạt động"
-                                : "Tạm khóa"}
-                            </span>
-                          </td>
-
-                          <td
-                            style={{ cursor: "pointer", position: "relative" }}
-                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                          >
-                            <DropDownHandle
-                              id={item.id}
-                              setId={setId}
-                              setOpenDelete={setOpenDelete}
-                              setOpenForm={setOpenCreate}
-                              setIsEdit={setIsEdit}
-                            />
+                              Xóa
+                            </button>
                           </td>
                         </tr>
                       ))
@@ -318,14 +252,7 @@ export default function TableVoucher() {
           <Navigation data={meta} page={page} setPage={setPage} />
         )}
       </div>
-      <CreateVoucher
-        id={id}
-        list={list}
-        setList={setList}
-        isEdit={isEdit}
-        open={openCreate}
-        setOpen={setOpenCreate}
-      />
+
       <ConfirmDeleted
         onDelete={handleDelete}
         text="Bạn có chắc chắn muốn xóa không? Nếu xóa, mục này sẽ mất hoàn toàn ."

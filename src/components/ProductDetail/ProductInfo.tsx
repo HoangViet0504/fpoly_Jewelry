@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProductDetail } from "../../types/interface";
+import { RestApi } from "../../api/utils/axios";
 
 interface ProductDetailProps {
   data: ProductDetail;
@@ -7,23 +8,24 @@ interface ProductDetailProps {
 export default function ProductInfo({
   data,
 }: ProductDetailProps): React.ReactElement {
-  const product = {
-    name: "Torua Helios Black Silver",
-    price: "1.750.000 VND",
-    purchases: 35,
-    sizes: ["16cm", "18cm", "20cm", "22cm"],
-    stock: 65,
-    images: [
-      "/images/product/sp1-1.webp",
-      "/images/product/sp1-2.webp",
-      "/images/product/sp1-3.webp",
-      "/images/product/sp1-4.webp",
-    ],
+  const fetchImage = async () => {
+    try {
+      const response = await RestApi("/getListProductsByCategoriesClient", {
+        params: {
+          id: data.id,
+        },
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+  useEffect(() => {
+    fetchImage();
+  }, []);
+  const [selectedSize, setSelectedSize] = useState(data.size[0]);
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(product.images[0]);
+  const [selectedImage, setSelectedImage] = useState(data.listImage[0]);
 
   return (
     <div className="flex justify-center items-center   text-black ">
@@ -32,7 +34,7 @@ export default function ProductInfo({
         <div className="flex gap-4 w-1/2">
           {/* Danh sách ảnh nhỏ */}
           <div className="flex flex-col gap-2">
-            {product.images.map((img, index) => (
+            {data.listImage.map((img, index) => (
               <img
                 key={index}
                 src={img}

@@ -1,109 +1,125 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { ArrowSmDownIcon, ArrowSmUpIcon } from "@heroicons/react/solid";
 import {
-  CursorClickIcon,
-  MailOpenIcon,
-  UsersIcon,
+  ShoppingCartIcon,
+  UserAddIcon,
+  RefreshIcon,
 } from "@heroicons/react/outline";
-
-const stats = [
-  {
-    id: 1,
-    name: "Total Subscribers",
-    stat: "71,897",
-    icon: UsersIcon,
-    change: "122",
-    changeType: "increase",
-  },
-  {
-    id: 2,
-    name: "Avg. Open Rate",
-    stat: "58.16%",
-    icon: MailOpenIcon,
-    change: "5.4%",
-    changeType: "increase",
-  },
-  {
-    id: 3,
-    name: "Avg. Click Rate",
-    stat: "24.57%",
-    icon: CursorClickIcon,
-    change: "3.2%",
-    changeType: "decrease",
-  },
-  {
-    id: 4,
-    name: "Avg. Click Rate",
-    stat: "24.57%",
-    icon: CursorClickIcon,
-    change: "3.2%",
-    changeType: "decrease",
-  },
-];
-
+import { CurrencyDollarIcon } from "@heroicons/react/outline";
+import { RestApi } from "../../../api/utils/axios";
+import { useEffect, useState } from "react";
+import { formatCurrencyVND } from "../../../common/helper";
+import { CubeIcon } from "@heroicons/react/outline";
+import { TagIcon } from "@heroicons/react/outline";
+import { href } from "react-router-dom";
+import { paths } from "../../../common/constant";
+import { useNavigate } from "react-router-dom";
+import { useFilterDashboard } from "../../../stores/useFilterDashboard";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Stats() {
+  const [revenue, setRevenue] = useState(0);
+  const [orders, setOrders] = useState(0);
+  const [products, setProducts] = useState(0);
+  const navigate = useNavigate();
+  const [coupons, setCoupons] = useState(0);
+  const { filter, setFilter } = useFilterDashboard();
+  const fetchData = async () => {
+    try {
+      const response = await RestApi.get("/getRevenueLast30Days");
+      setRevenue(response.data.totalRevenue);
+      const responseOrder = await RestApi.get("/getTotalOrdersLast30Days");
+      setOrders(responseOrder.data.totalOrders);
+      const responseProduct = await RestApi.get(
+        "/getNewProductCountLast30Days"
+      );
+      setProducts(responseProduct.data.data);
+      const responseCoupon = await RestApi.get("/getOrderNew");
+      setCoupons(responseCoupon.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const stats = [
+    {
+      id: 1,
+      name: "Tổng doanh thu",
+      stat: formatCurrencyVND(revenue),
+      icon: CurrencyDollarIcon,
+      changeType: "increase",
+      href: "#",
+    },
+    {
+      id: 2,
+      name: "Tổng đơn hàng",
+      stat: orders,
+      icon: ShoppingCartIcon,
+      changeType: "increase",
+      href: "#",
+    },
+    {
+      id: 3,
+      name: "Số lượng sản phẩm mới",
+      stat: products,
+      icon: CubeIcon,
+      changeType: "increase",
+      href: "#",
+    },
+    {
+      id: 4,
+      name: "Đơn hàng mới",
+      stat: coupons,
+      icon: TagIcon,
+      changeType: "increase",
+      href: paths.dashboard.order,
+    },
+  ];
+
   return (
     <div>
       <h3 className="text-lg leading-6 font-medium text-gray-900">
-        Last 30 days
+        Thống kê 30 ngày qua
       </h3>
 
       <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <div
+            onClick={() => {
+              console.log("13");
+
+              setFilter("paying");
+              navigate(item.href);
+              // window.location.href = item.href;
+            }}
             key={item.id}
-            className="relative bg-white pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow rounded-lg overflow-hidden"
+            className="relative bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
           >
             <dt>
-              <div className="absolute bg-indigo-500 rounded-md p-3">
-                <item.icon className="h-6 w-6 text-white" aria-hidden="true" />
+              <div className="absolute bg-white rounded-md p-3">
+                <item.icon
+                  className="h-6 w-6 text-indigo-500"
+                  aria-hidden="true"
+                />
               </div>
-              <p className="ml-16 text-sm font-medium text-gray-500 truncate">
-                {item.name}
-              </p>
+              <p className="ml-16 text-sm font-medium truncate">{item.name}</p>
             </dt>
             <dd className="ml-16 pb-6 flex items-baseline sm:pb-7">
-              <p className="text-2xl font-semibold text-gray-900">
-                {item.stat}
-              </p>
-              <p
-                className={classNames(
-                  item.changeType === "increase"
-                    ? "text-green-600"
-                    : "text-red-600",
-                  "ml-2 flex items-baseline text-sm font-semibold"
-                )}
-              >
-                {item.changeType === "increase" ? (
-                  <ArrowSmUpIcon
-                    className="self-center flex-shrink-0 h-5 w-5 text-green-500"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <ArrowSmDownIcon
-                    className="self-center flex-shrink-0 h-5 w-5 text-red-500"
-                    aria-hidden="true"
-                  />
-                )}
+              <p className="text-2xl font-semibold">{item.stat}</p>
 
-                <span className="sr-only">
-                  {item.changeType === "increase" ? "Increased" : "Decreased"}{" "}
-                  by
-                </span>
-                {item.change}
-              </p>
-              <div className="absolute bottom-0 inset-x-0 bg-gray-50 px-4 py-4 sm:px-6">
+              <div className="absolute bottom-0 inset-x-0 bg-white bg-opacity-10 px-4 py-4 sm:px-6">
                 <div className="text-sm">
                   <a
                     href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                    className="font-medium text-white hover:underline"
                   >
                     {" "}
-                    View all<span className="sr-only"> {item.name} stats</span>
+                    Xem chi tiết<span className="sr-only"> {item.name}</span>
                   </a>
                 </div>
               </div>

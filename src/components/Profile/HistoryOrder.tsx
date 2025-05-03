@@ -216,6 +216,11 @@ export default function HistoryOrder(): React.ReactElement {
                     : "Không rõ"}
                 </p>
               </div>
+              <p className="mt-2 text-sm text-gray-500">Tên: {order.name}</p>
+              <p className="mt-2 text-sm text-gray-500">
+                Số điện thoại: {order.phone}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">Email: {order.email}</p>
               <p className="mt-2 text-sm text-gray-500">
                 Địa chỉ: {order.address.join(", ")}
               </p>

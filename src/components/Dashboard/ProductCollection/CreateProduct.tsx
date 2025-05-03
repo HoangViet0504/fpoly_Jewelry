@@ -91,7 +91,6 @@ export default function CreateProduct({
 
         formik.setFieldValue("status", response.data.data.status);
         formik.setFieldValue("id_categories", response.data.data.id_category);
-        formik.setFieldValue("id_collection", response.data.data.id_collection);
       }
     } catch (error) {
       console.log(error);
@@ -107,7 +106,7 @@ export default function CreateProduct({
   const formik = useFormik({
     initialValues: {
       id_categories: "",
-      id_collection: null,
+      id_collection: "",
       name_product: "",
       short_description: "",
       description: "",
@@ -127,7 +126,7 @@ export default function CreateProduct({
           id: id,
           name: value.name_product,
           id_categories: value.id_categories,
-          id_collection: value.id_collection,
+          id_collection: null,
           short_description: value.short_description,
           description: value.description,
           quantity: value.quantity,
@@ -160,7 +159,7 @@ export default function CreateProduct({
       } else {
         const data = {
           id_categories: value.id_categories,
-          id_collection: value.id_collection,
+          id_collection: 1,
           name_product: value.name_product,
           short_description: value.short_description,
           description: value.description,
@@ -172,8 +171,6 @@ export default function CreateProduct({
           made: value.made,
           size: JSON.stringify(value.size.split(",").map(String)),
         };
-
-        console.log(data);
 
         try {
           const response = await RestApi.post("/AddProductsAdmin", data);
@@ -231,7 +228,7 @@ export default function CreateProduct({
                       }}
                     >
                       <label className="block text-sm font-medium text-gray-700 text-center">
-                        Hình
+                        Hình sản phẩm
                       </label>
                       <div className="mt-1 flex items-center">
                         <ChangeImage
@@ -440,16 +437,14 @@ export default function CreateProduct({
                           <option value="" disabled>
                             Vui lòng chọn
                           </option>
-                          {listCategories
-                            .filter((item) => item.type === "category")
-                            .map((item) => (
-                              <option
-                                key={item.id_categories}
-                                value={item.id_categories}
-                              >
-                                {item.name}
-                              </option>
-                            ))}
+                          {listCategories.map((item) => (
+                            <option
+                              key={item.id_categories}
+                              value={item.id_categories}
+                            >
+                              {item.name}
+                            </option>
+                          ))}
                         </select>
                         {formik.touched.id_categories &&
                           formik.errors.id_categories && (
@@ -482,43 +477,6 @@ export default function CreateProduct({
                               {formik.errors.description}
                             </p>
                           )}
-                      </div>
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="province"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Bộ sưu tập
-                        </label>
-                        <select
-                          id="province"
-                          name="id_collection"
-                          value={formik.values.id_collection ?? ""}
-                          onChange={(e) => {
-                            console.log(e.target.value);
-
-                            formik.setFieldValue(
-                              "id_collection",
-                              e.target.value
-                            );
-                          }}
-                          onBlur={formik.handleBlur}
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                          <option value="" disabled>
-                            Vui lòng chọn
-                          </option>
-                          {listCategories
-                            .filter((item) => item.type === "collection")
-                            .map((item) => (
-                              <option
-                                key={item.id_categories}
-                                value={item.id_categories}
-                              >
-                                {item.name}
-                              </option>
-                            ))}
-                        </select>
                       </div>
                     </div>
 

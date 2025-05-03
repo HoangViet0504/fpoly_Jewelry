@@ -7,16 +7,26 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  { name: "Vòng cổ", sales: 320 },
-  { name: "Nhẫn cưới", sales: 280 },
-  { name: "Lắc tay", sales: 200 },
-  { name: "Khuyên tai", sales: 150 },
-  { name: "Đồng hồ", sales: 120 },
-];
+import { RestApi } from "../../../api/utils/axios";
+import { useEffect, useState } from "react";
 
 export default function TopProductsBarChart() {
+  const [data, setData] = useState<any[]>([]);
+  const fetchProducts = async () => {
+    try {
+      const response = await RestApi.get("/getProductSale");
+      const data = response.data.data.map((item: any) => ({
+        name: item.name_product,
+        sales: item.price_sale > 0 ? item.price_sale : item.price,
+      }));
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   return (
     <div style={{ width: "100%", height: 400, textAlign: "center" }}>
       <h3 style={{ marginBottom: 20, color: "#4A4A4A", fontWeight: "bold" }}>
@@ -28,10 +38,7 @@ export default function TopProductsBarChart() {
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-          <XAxis
-            dataKey="name"
-            tick={{ fontSize: 14, fontWeight: "bold", fill: "#555" }}
-          />
+          <XAxis dataKey="name" tick={false} /> {/* Ẩn tên dưới mỗi cột */}
           <YAxis
             tick={{ fontSize: 14, fontWeight: "bold", fill: "#555" }}
             allowDecimals={false}

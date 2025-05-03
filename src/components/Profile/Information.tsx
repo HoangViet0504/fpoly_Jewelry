@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { province } from "../../types/interface";
 import { ToastMessage } from "../ToastMessage";
 import { CircularProgress } from "@mui/material";
+import { noImage } from "../../common/constant";
 
 const validationSchema = Yup.object({
   first_name: Yup.string()
@@ -190,7 +191,7 @@ export default function Information(): React.ReactElement {
       <div className="flex items-center space-x-4">
         <div className="relative w-24 h-24 rounded-full overflow-hidden">
           <img
-            src={formik.values.avatar_img || "/images/logo/LOGO.png"}
+            src={formik.values.avatar_img || noImage}
             alt="Profile"
             className="w-full h-full object-cover"
           />

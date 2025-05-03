@@ -189,26 +189,32 @@ export default function TableProduct() {
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Số thứ tự
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
-                      >
-                        Mã danh mục
+                        Thứ tự
                       </th>
                       <th
                         scope="col"
                         className="px-6  py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Hình sản phẩm
+                        Hình
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Danh mục
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
+                      >
+                        Bộ sưu tập
                       </th>
 
                       <th
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider "
                       >
-                        Tên sản phẩm
+                        Tên
                       </th>
 
                       <th
@@ -265,11 +271,6 @@ export default function TableProduct() {
                               {index + 1}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-center">
-                            <div className="text-sm text-gray-900">
-                              {item.category_name}
-                            </div>
-                          </td>
                           <td
                             style={{
                               display: "flex",
@@ -290,12 +291,28 @@ export default function TableProduct() {
                               </div>
                             </div>
                           </td>
-
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">
-                              {item.name_product}
+                              {item.category_name}
                             </div>
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="text-sm text-gray-900">
+                              {
+                                listCategories.find(
+                                  (item1) =>
+                                    item1.id_categories === item.id_collection
+                                )?.name
+                              }
+                            </div>
+                          </td>
+
+                          <div
+                            className="text-sm text-gray-900 max-w-[200px] truncate mx-auto"
+                            title={item.name_product}
+                          >
+                            {item.name_product}
+                          </div>
 
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="text-sm text-gray-900">

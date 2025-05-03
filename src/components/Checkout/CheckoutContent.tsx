@@ -55,7 +55,6 @@ export default function CheckoutContent() {
       const response = await RestApi.get("/getListCartByUser", {
         params: { id: user?.id_user },
       });
-      console.log(response.data.data);
 
       setCartItem(response.data.data);
     } catch (error) {
@@ -675,6 +674,7 @@ export default function CheckoutContent() {
 
               <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                 <button
+                  disabled={cartItem.length === 0}
                   type="submit"
                   className="w-full bg-indigo-600 border border-transparent rounded-md  py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 cursor-pointer"
                 >

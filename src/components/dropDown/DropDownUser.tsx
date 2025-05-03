@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 
-import { paths, Token } from "../../common/constant";
+import { noImage, paths, Token } from "../../common/constant";
 import { useAuthStore } from "../../stores/useAuthStore";
 import Cookies from "js-cookie";
 
@@ -26,7 +26,7 @@ export default function DropDownUser() {
           {user ? (
             <img
               className="inline-block h-10 w-10 rounded-full"
-              src={user?.avatar_img}
+              src={user?.avatar_img ?? noImage}
               alt=""
             />
           ) : (
