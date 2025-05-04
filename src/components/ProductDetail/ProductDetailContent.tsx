@@ -8,6 +8,8 @@ import ProductReview from "./ProductReviews";
 import RelatedProducts from "./RelatedProducts";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { ToastMessage } from "../ToastMessage";
+import { paths } from "../../common/constant";
+import { useNavigate } from "react-router-dom";
 
 interface ProductDetailContentProps {
   slug: string;
@@ -36,6 +38,7 @@ export default function ProductDetailContent({
 
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState("");
   const { user } = useAuthStore();
 
@@ -220,6 +223,42 @@ export default function ProductDetailContent({
               </button>
               <button
                 disabled={ProductDetail.quantity === 0}
+                onClick={async () => {
+                  if (ProductDetail.quantity < quantity) {
+                    ToastMessage(
+                      "error",
+                      `Số lượng sản phẩm trong kho không đủ!`
+                    );
+                    return;
+                  }
+                  if (!user) {
+                    addToCart({
+                      id_product: ProductDetail.id,
+                      size: selectedSize === "" ? undefined : selectedSize,
+                      quantity,
+                      total:
+                        Number(ProductDetail.price_sale) > 0
+                          ? Number(ProductDetail.price_sale) * quantity
+                          : Number(ProductDetail.price) * quantity,
+                      made: ProductDetail.made,
+                      id_user: undefined,
+                    });
+                  } else {
+                    try {
+                      const response = await RestApi.post("/addProductToCart", {
+                        id_product: ProductDetail.id,
+                        size: selectedSize === "" ? undefined : selectedSize,
+                        quantity,
+                        made: ProductDetail.made,
+                        id_user: user.id_user,
+                      });
+                      ToastMessage("success", response.data.message);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                  navigate(paths.cart);
+                }}
                 className="bg-yellow-500 px-6 py-3 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition"
               >
                 Mua ngay

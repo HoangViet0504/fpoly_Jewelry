@@ -10,7 +10,7 @@ const InfoTabsPage = () => {
       case "complaint":
         return (
           <div className="text-left p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-blue-600">Khiếu nại</h2>
+            <h2 className="text-2xl font-bold mb-4 ">Khiếu nại</h2>
             <p className="mb-4">
               Nếu bạn có bất kỳ khiếu nại nào, vui lòng liên hệ với chúng tôi
               qua email hoặc số điện thoại được cung cấp trên trang web. Chúng
@@ -23,27 +23,20 @@ const InfoTabsPage = () => {
             </ul>
             <p className="mb-4">
               Email hỗ trợ:{" "}
-              <a
-                href="mailto:support@example.com"
-                className="text-blue-500 underline"
-              >
+              <a href="mailto:support@example.com" className=" underline">
                 support@example.com
               </a>
             </p>
             <p>
               Số điện thoại hỗ trợ:{" "}
-              <span className="text-blue-500 font-semibold">
-                +84 123 456 789
-              </span>
+              <span className=" font-semibold">+84 123 456 789</span>
             </p>
           </div>
         );
       case "privacy":
         return (
           <div className="text-left p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-green-600">
-              Chính sách bảo mật
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 ">Chính sách bảo mật</h2>
             <p className="mb-4">
               Chúng tôi cam kết bảo mật thông tin cá nhân của bạn. Vui lòng đọc
               kỹ chính sách bảo mật của chúng tôi để hiểu rõ cách chúng tôi thu
@@ -57,17 +50,14 @@ const InfoTabsPage = () => {
             <p className="mb-4">
               Nếu bạn có bất kỳ câu hỏi nào về chính sách bảo mật, vui lòng liên
               hệ với chúng tôi qua email:{" "}
-              <a
-                href="mailto:privacy@example.com"
-                className="text-green-500 underline"
-              >
+              <a href="mailto:privacy@example.com" className=" underline">
                 privacy@example.com
               </a>
               .
             </p>
             <p>
               Để biết thêm thông tin chi tiết, vui lòng truy cập trang{" "}
-              <a href="/privacy-policy" className="text-green-500 underline">
+              <a href="/privacy-policy" className=" underline">
                 Chính sách bảo mật
               </a>
               .
@@ -222,9 +212,7 @@ const InfoTabsPage = () => {
       case "terms":
         return (
           <div className="text-left p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">
-              Chính sách bảo hành
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 ">Chính sách bảo hành</h2>
             <h3 className="text-xl font-semibold mb-2">SẢN PHẨM BẠC S925</h3>
             <ul className="list-disc list-inside mb-4">
               <li>
@@ -315,9 +303,7 @@ const InfoTabsPage = () => {
       case "payment":
         return (
           <div className="text-left p-6 bg-white shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-purple-600">
-              Hướng dẫn thanh toán
-            </h2>
+            <h2 className="text-2xl font-bold mb-4 ">Hướng dẫn thanh toán</h2>
             <p className="mb-4">
               Sau khi bạn hoàn tất thanh toán, hệ thống sẽ xử lý đơn hàng của
               bạn. Vui lòng đợi từ <strong>5 đến 10 phút</strong> để chúng tôi
@@ -334,10 +320,7 @@ const InfoTabsPage = () => {
             </ul>
             <p>
               Email hỗ trợ:{" "}
-              <a
-                href="mailto:payment@example.com"
-                className="text-purple-500 underline"
-              >
+              <a href="mailto:payment@example.com" className=" underline">
                 payment@example.com
               </a>
             </p>

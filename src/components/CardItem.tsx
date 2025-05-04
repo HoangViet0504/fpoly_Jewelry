@@ -6,6 +6,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useAuthStore } from "../stores/useAuthStore";
 import { RestApi } from "../api/utils/axios";
 import { ToastMessage } from "./ToastMessage";
+import { useNavigate } from "react-router-dom";
 
 interface ProductProps {
   data?: Product[];
@@ -14,6 +15,7 @@ interface ProductProps {
 
 export default function CardItem({ data }: ProductProps): React.ReactElement {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
   const [listFavorite, setListFavorite] = useState<favorite[]>([]);
   const fetchFavorite = async () => {
     try {
@@ -229,7 +231,47 @@ export default function CardItem({ data }: ProductProps): React.ReactElement {
                       >
                         Thêm hàng
                       </button>
-                      <button className="bg-yellow-500 px-3 py-2 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition cursor-pointer">
+                      <button
+                        onClick={async (e) => {
+                          if (!user) {
+                            e.preventDefault();
+                            addToCart({
+                              id_product: product.id,
+                              size: JSON.parse(product.size)
+                                ? JSON.parse(product.size)[0]
+                                : "",
+                              quantity: 1,
+                              total:
+                                Number(product.price_sale) > 0
+                                  ? Number(product.price_sale) * 1
+                                  : Number(product.price) * 1,
+                              made: product.made,
+                              id_user: undefined,
+                            });
+                          } else {
+                            e.preventDefault();
+                            try {
+                              const response = await RestApi.post(
+                                "/addProductToCart",
+                                {
+                                  id_product: product.id,
+                                  size: JSON.parse(product.size)
+                                    ? JSON.parse(product.size)[0]
+                                    : "",
+                                  quantity: 1,
+                                  made: product.made,
+                                  id_user: user.id_user,
+                                }
+                              );
+                              ToastMessage("success", response.data.message);
+                            } catch (error) {
+                              console.log(error);
+                            }
+                          }
+                          navigate(paths.cart);
+                        }}
+                        className="bg-yellow-500 px-3 py-2 text-black w-1/2 rounded-md font-semibold hover:bg-yellow-400 transition cursor-pointer"
+                      >
                         Mua ngay
                       </button>
                     </div>
