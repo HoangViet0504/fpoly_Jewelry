@@ -342,7 +342,7 @@ const InfoTabsPage = () => {
           <button
             className={`px-6 py-3 rounded-lg font-semibold transition ${
               activeTab === "complaint"
-                ? "bg-blue-500 text-white shadow-lg"
+                ? "bg-yellow-500 text-white shadow-lg"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("complaint")}
@@ -352,7 +352,7 @@ const InfoTabsPage = () => {
           <button
             className={`px-6 py-3 rounded-lg font-semibold transition ${
               activeTab === "privacy"
-                ? "bg-green-500 text-white shadow-lg"
+                ? "bg-yellow-500 text-white shadow-lg"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("privacy")}
@@ -362,7 +362,7 @@ const InfoTabsPage = () => {
           <button
             className={`px-6 py-3 rounded-lg font-semibold transition ${
               activeTab === "terms"
-                ? "bg-red-500 text-white shadow-lg"
+                ? "bg-yellow-500 text-white shadow-lg"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("terms")}
@@ -372,7 +372,7 @@ const InfoTabsPage = () => {
           <button
             className={`px-6 py-3 rounded-lg font-semibold transition ${
               activeTab === "payment"
-                ? "bg-purple-500 text-white shadow-lg"
+                ? "bg-yellow-500 text-white shadow-lg"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("payment")}
