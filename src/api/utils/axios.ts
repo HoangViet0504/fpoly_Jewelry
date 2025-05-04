@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { ToastMessage } from "../../components/ToastMessage";
 
 export const RestApi: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://89.116.21.73:8088",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
