@@ -198,7 +198,9 @@ export default function CheckoutContent() {
                   const responseUrl = await RestApi.post("/checkOut", {
                     amount: calculateSubtotal(cartItem) - discount,
                     userId: user?.id_user,
+                    idOrder: responseOrder.data.data,
                   });
+
                   window.location.href = responseUrl.data.data.order_url;
                 } catch (error) {
                   console.log(error);
