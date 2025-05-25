@@ -22,6 +22,7 @@ import OrderPage from "../pages/Dashboard/Order/OrderPage";
 import ProductCollectionPage from "../pages/Dashboard/ProductCollection/ProductCollectionPage";
 import ImageProductPage from "../pages/Dashboard/ImageProduct/ImageProductPage";
 import InfoTabsPage from "../pages/InfoTabs/InfoTabsPage";
+import QrOrderPaymentPage from "../components/Checkout/QrPayment";
 
 const AppRouter = () => (
   <Router>
@@ -34,6 +35,7 @@ const AppRouter = () => (
       <Route path="/about-us" element={<AboutPage />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/payment/:id" element={<QrOrderPaymentPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/checkout-success" element={<SuccessCheckout />} />
       <Route
