@@ -14,14 +14,14 @@ const SuccessCheckout = () => {
 
     const parsed = Object.fromEntries(new URLSearchParams(queryParams));
 
-    const testAxios = async () => {
+    const updateStatusOrderFromZalopay = async () => {
         if (Number(status) === 1) {
         }
 
         try {
             const res = await RestApi.post("/updateOrderStatus", {
                 orderId: result,
-                status: "success",
+                status: "new",
                 dataObj: parsed,
             });
 
@@ -35,13 +35,13 @@ const SuccessCheckout = () => {
             const res = await RestApi.get(`/checkOrderStatus/${result}`);
 
             if (res.data.data === "success") {
-                return window.location.href = "/";
+                return (window.location.href = "/");
             }
         } catch (error) {}
     };
 
     useEffect(() => {
-        testAxios();
+        updateStatusOrderFromZalopay();
         const timer = setTimeout(() => {
             fetchCheckOrderStatus();
         }, 5000);
