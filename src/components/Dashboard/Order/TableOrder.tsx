@@ -96,11 +96,6 @@ export default function TableOrder() {
                 }
             });
             setOrderData(merged);
-
-            console.log("====================================");
-            console.log("merged:", merged);
-            console.log("orderData:", orderData);
-            console.log("====================================");
         } catch (error) {
             console.log(error);
         } finally {
