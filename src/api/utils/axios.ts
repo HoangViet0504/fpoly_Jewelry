@@ -4,7 +4,8 @@ import Cookies from "js-cookie";
 import { ToastMessage } from "../../components/ToastMessage";
 
 export const RestApi: AxiosInstance = axios.create({
-    baseURL: "http://89.116.21.73:8088",
+    baseURL: "https://edu.appcloudhub.com/backend",
+    // baseURL: "http://89.116.21.73:8088",
     // baseURL: "http://localhost:3000",
     timeout: 10000,
     headers: {
