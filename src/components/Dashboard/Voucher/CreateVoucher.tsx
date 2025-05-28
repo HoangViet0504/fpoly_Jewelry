@@ -105,8 +105,8 @@ export default function CreateVoucher({
             name: "",
             start_date: "",
             expires_at: "",
-            coupon_min_spend: 0,
-            coupon_max_spend: "",
+            coupon_min_spend: "0",
+            coupon_max_spend: "0",
             description: "",
             quantity: "",
             type: "amount",
@@ -373,7 +373,8 @@ export default function CreateVoucher({
                                                         }
                                                         value={
                                                             formik.values
-                                                                .coupon_max_spend
+                                                                .coupon_max_spend ??
+                                                            0
                                                         }
                                                         onBlur={
                                                             formik.handleBlur

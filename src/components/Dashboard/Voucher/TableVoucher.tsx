@@ -151,12 +151,6 @@ export default function TableVoucher() {
                         scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Giảm thấp nhất
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
                         Giảm cao nhất
                       </th>
                       <th
@@ -215,11 +209,6 @@ export default function TableVoucher() {
                               {item.type_coupon === "percent"
                                 ? item.discount + "%"
                                 : formatCurrencyVND(item.discount)}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-center">
-                            <div className="text-sm text-gray-900">
-                              {formatCurrencyVND(item.coupon_min_spend)}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
