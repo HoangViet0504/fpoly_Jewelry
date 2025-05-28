@@ -46,7 +46,7 @@ export default function HistoryOrder(): React.ReactElement {
         useState<MergedOrder | null>(null);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
     // get orders
     const fetchOrders = async () => {
         setIsLoading(true);

@@ -13,6 +13,8 @@ import { maxPerSize, paths } from "../../../common/constant";
 import { formatCurrencyVND, formatTimeDateVN } from "../../../common/helper";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useFilterDashboard } from "../../../stores/useFilterDashboard";
+import ModalOrderDetail from "../../Dialog/ModalOrderDetail";
+import ModalOrderDetailAdmin from "../../Dialog/ModalOrderDetailAdmin";
 <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5"
@@ -33,7 +35,9 @@ export default function TableOrder() {
     const [isLoading, setIsLoafing] = useState(true);
     const [orderData, setOrderData] = useState<MergedOrder[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<string>("");
-
+    const [openViewDetailOrder, setOpenViewDetailOrder] = useState(false);
+    const [dataSelectedOrder, setdataSelectedOrder] =
+        useState<MergedOrder | null>(null);
     useEffect(() => {
         if (filter !== "") {
             setStatus(filter);
@@ -166,243 +170,167 @@ export default function TableOrder() {
                             </select>
                         </div>
                     </div>
-                </div>
-                <div className="bg-white">
-                    <div className=" py-4">
-                        <div className=" space-y-6 ">
-                            {orderData.map((order) => (
-                                <section
-                                    key={order.id_order}
-                                    aria-labelledby={`${order.id_order}-heading`}
-                                    className="border border-gray-200 rounded-lg shadow-sm p-6">
-                                    <div className="flex justify-between items-center">
-                                        <h2
-                                            id={`${order.id_order}-heading`}
-                                            className="text-lg font-semibold text-gray-900">
-                                            Mã đơn hàng #{order.id_order}
-                                        </h2>
-                                        <p
-                                            className={`text-sm font-medium px-2 py-1 rounded ${
-                                                order.status === "paying"
-                                                    ? "bg-yellow-100 text-yellow-800"
-                                                    : order.status === "new"
-                                                    ? "bg-blue-100 text-blue-800"
-                                                    : order.status ===
-                                                      "shipping"
-                                                    ? "bg-indigo-100 text-indigo-800"
-                                                    : order.status === "success"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : order.status === "cancel"
-                                                    ? "bg-red-100 text-red-800"
-                                                    : "bg-gray-100 text-gray-800"
-                                            }`}>
-                                            {order.status === "paying"
-                                                ? "Đang thanh toán"
-                                                : order.status === "new"
-                                                ? "Đang xử lý"
-                                                : order.status === "shipping"
-                                                ? "Đang giao"
-                                                : order.status === "success"
-                                                ? "Thành công"
-                                                : order.status === "cancel"
-                                                ? "Hủy đơn"
-                                                : "Không rõ"}
-                                        </p>
-                                    </div>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Tên: {order.name}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Số điện thoại: {order.phone}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Email: {order.email}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Địa chỉ: {order.address.join(", ")}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Ghi chú:{" "}
-                                        {order.note || "Không có ghi chú"}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Tổng tiền:{" "}
-                                        {formatCurrencyVND(order.total_amount)}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Giảm giá:{" "}
-                                        {formatCurrencyVND(order.discount)}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Phí ship: {"Miễn phí"}
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-500">
-                                        Phương thức thanh toán:{" "}
-                                        {order.payment_method}
-                                    </p>
-                                    <div className="mt-4">
-                                        <button
-                                            type="button"
-                                            className="text-sm text-indigo-600 hover:text-indigo-500 font-medium cursor-pointer"
-                                            onClick={() =>
-                                                document
-                                                    .getElementById(
-                                                        `products-${order.id_order}`
-                                                    )
-                                                    ?.classList.toggle("hidden")
-                                            }>
-                                            Xem sản phẩm
-                                        </button>
-                                    </div>
-                                    <div className="mt-4">
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                maxWidth: "200px",
-                                            }}>
-                                            {order.status !== "success" &&
-                                                order.status !== "cancel" && (
-                                                    <select
-                                                        onChange={(e) => {
-                                                            handleUpdateStatus(
-                                                                String(
-                                                                    order.id_order
-                                                                ),
-                                                                e.target.value
-                                                            );
-                                                        }}
-                                                        defaultValue={
-                                                            order.status
-                                                        }
-                                                        className="mt-2 w-full bg-white border border-gray-300 text-gray-900 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                                        {/* <option value="paying">
-                                                            Đang thanh toán
-                                                        </option>
-                                                        <option value="new">
-                                                            Đang xử lý
-                                                        </option>
-                                                        <option value="shipping">
-                                                            Đang giao hàng
-                                                        </option>
-                                                        <option value="success">
-                                                            Thành công
-                                                        </option>
-                                                        <option value="cancel">
-                                                            Hủy
-                                                        </option> */}
-                                                        <option
-                                                            value="paying"
-                                                            disabled={[
-                                                                "new",
-                                                                "shipping",
-                                                                "success",
-                                                                "cancel",
-                                                            ].includes(
-                                                                order.status
-                                                            )}>
-                                                            Đang thanh toán
-                                                        </option>
-                                                        <option
-                                                            value="new"
-                                                            disabled={[
-                                                                "shipping",
-                                                                "success",
-                                                                "cancel",
-                                                            ].includes(
-                                                                order.status
-                                                            )}>
-                                                            Đang xử lý
-                                                        </option>
-                                                        <option
-                                                            value="shipping"
-                                                            disabled={[
-                                                                "success",
-                                                                "cancel",
-                                                            ].includes(
-                                                                order.status
-                                                            )}>
-                                                            Đang giao hàng
-                                                        </option>
-                                                        <option value="success">
-                                                            Thành công
-                                                        </option>
-                                                        <option value="cancel">
-                                                            Hủy
-                                                        </option>
-                                                    </select>
+                    <div className="mt-12 space-y-6 sm:mt-4">
+                        <table className="min-w-full min-h-full divide-y divide-gray-200">
+                            <thead
+                                className="bg-gray-50"
+                                style={
+                                    {
+                                        // whiteSpace: "nowrap",
+                                    }
+                                }>
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ">
+                                        Mã ĐH
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ">
+                                        Tên khách hàng
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ">
+                                        Email
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ">
+                                        Số điện thoại
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ">
+                                        Tổng tiền
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Địa chỉ
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Trạng thái
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {orderData.length !== 0 ? (
+                                    orderData.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">
+                                                    #{item.id}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">
+                                                    {item.name}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">
+                                                    {item.email}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">
+                                                    {item.phone}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap  ">
+                                                {formatCurrencyVND(
+                                                    item.total_amount
                                                 )}
-                                        </div>
-                                    </div>
-                                    <div
-                                        id={`products-${order.id_order}`}
-                                        className="mt-6 hidden">
-                                        {order.products.map(
-                                            (product, index) => (
+                                            </td>
+                                            <td className="px-6 py-4 max-w-[150px] truncate whitespace-nowrap overflow-hidden">
+                                                {item.address}
+                                            </td>
+
+                                            <td className="px-6 py-4 whitespace-nowrap  ">
+                                                <p
+                                                    className={`text-sm font-medium px-2 py-1 rounded ${
+                                                        item.status === "paying"
+                                                            ? "bg-yellow-100 text-yellow-800"
+                                                            : item.status ===
+                                                              "new"
+                                                            ? "bg-blue-100 text-blue-800"
+                                                            : item.status ===
+                                                              "shipping"
+                                                            ? "bg-indigo-100 text-indigo-800"
+                                                            : item.status ===
+                                                              "success"
+                                                            ? "bg-green-100 text-green-800"
+                                                            : item.status ===
+                                                              "cancel"
+                                                            ? "bg-red-100 text-red-800"
+                                                            : "bg-gray-100 text-gray-800"
+                                                    }`}>
+                                                    {item.status === "paying"
+                                                        ? "Đang thanh toán"
+                                                        : item.status === "new"
+                                                        ? "Đang xử lý"
+                                                        : item.status ===
+                                                          "shipping"
+                                                        ? "Đang giao"
+                                                        : item.status ===
+                                                          "success"
+                                                        ? "Thành công"
+                                                        : item.status ===
+                                                          "cancel"
+                                                        ? "Hủy đơn"
+                                                        : "Không rõ"}
+                                                </p>
+                                            </td>
+
+                                            <td>
                                                 <a
-                                                    key={index}
-                                                    href={paths.productDetail(
-                                                        product.slug
-                                                    )}
-                                                    className="flex items-center space-x-4 border-t border-gray-200 pt-4 first:border-t-0 first:pt-0 hover:bg-gray-50 rounded-md p-2 transition">
-                                                    <img
-                                                        src={
-                                                            product.primary_image
+                                                    href="#"
+                                                    onClick={(e) => {
+                                                        {
+                                                            e.preventDefault();
+                                                            setOpenViewDetailOrder(
+                                                                true
+                                                            );
+                                                            setdataSelectedOrder(
+                                                                item
+                                                            );
                                                         }
-                                                        alt={
-                                                            product.name_product
-                                                        }
-                                                        className="w-16 h-16 rounded-md object-cover"
-                                                    />
-                                                    <div className="flex-1">
-                                                        <h3 className="text-sm font-medium text-gray-900">
-                                                            {
-                                                                product.name_product
-                                                            }
-                                                        </h3>
-                                                        <p className="text-sm text-gray-500">
-                                                            kích cỡ:{" "}
-                                                            {product.size}
-                                                        </p>
-                                                        <p className="text-sm text-gray-500">
-                                                            Số lượng:{" "}
-                                                            {product.quantity}
-                                                        </p>
-                                                        <p className="text-sm text-gray-500">
-                                                            Chất liệu:{" "}
-                                                            {product.made ||
-                                                                "Không rõ"}
-                                                        </p>
-                                                        <p className="text-sm font-medium text-gray-900">
-                                                            Giá:{" "}
-                                                            {formatCurrencyVND(
-                                                                product.price
-                                                            )}
-                                                        </p>
-                                                    </div>
+                                                    }}>
+                                                    Xem chi tiết
                                                 </a>
-                                            )
-                                        )}
-                                    </div>
-                                </section>
-                            ))}
-                            {orderData.length === 0 && (
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}>
-                                    <span style={{ textAlign: "center" }}>
-                                        Không có đơn hàng nào tồn tại
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <td
+                                        colSpan={11} // Số lượng cột phù hợp với bảng
+                                        className="px-6 py-4 text-gray-500">
+                                        Không có dữ liệu
+                                    </td>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
+                    {orderData.length !== 0 && (
+                        <Navigation data={meta} page={page} setPage={setPage} />
+                    )}
+
+                    {openViewDetailOrder && (
+                        <ModalOrderDetailAdmin
+                            open={openViewDetailOrder}
+                            setOpen={setOpenViewDetailOrder}
+                            dataOrder={dataSelectedOrder}
+                            handleReloadData={fetchOrders}
+                        />
+                    )}
                 </div>
-                {orderData.length !== 0 && (
-                    <Navigation data={meta} page={page} setPage={setPage} />
-                )}
             </div>
         </>
     );
