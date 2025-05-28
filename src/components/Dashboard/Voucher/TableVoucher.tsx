@@ -107,32 +107,6 @@ export default function TableVoucher() {
                 <option value="amount">Tiền mặt</option>
                 <option value="percent">Phần trăm</option>
               </select>
-              {/* <button
-                className="flex items-center gap-2 px-5 py-2 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                onClick={() => {
-                  setOpenTrash(true);
-                  // Add functionality for trash button here
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6 8a1 1 0 011-1h6a1 1 0 011 1v8a2 2 0 01-2 2H8a2 2 0 01-2-2V8zm2-3a1 1 0 00-1 1v1h6V6a1 1 0 00-1-1H8z"
-                    clipRule="evenodd"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    d="M4 6a1 1 0 011-1h10a1 1 0 011 1v1H4V6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Thùng rác</span>
-              </button> */}
             </div>
             <button
               onClick={() => {
