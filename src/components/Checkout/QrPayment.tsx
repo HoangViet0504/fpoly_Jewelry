@@ -42,7 +42,7 @@ export default function QrOrderPaymentPage() {
                 {}
             );
 
-            if (response.data.data === "success") {
+            if (response.data.data === "new") {
                 ToastMessage(
                     "success",
                     `Thanh toán đơn hàng ${orderId} thành công`
