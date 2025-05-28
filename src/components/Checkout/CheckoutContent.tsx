@@ -42,7 +42,7 @@ const validationSchema = Yup.object({
 });
 
 const paymentMethods = [
-    { id: "Thanh toán online", title: "Thanh toán online" },
+    { id: "Thanh toán online", title: "Thanh toán zalo pay" },
     { id: "Thanh toán sepay", title: "Thanh toán Sepay" },
     { id: "Thanh toán khi nhận hàng", title: "Thanh toán khi nhận hàng" },
 ];
