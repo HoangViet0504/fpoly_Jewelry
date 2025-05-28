@@ -110,7 +110,7 @@ export default function QrOrderPaymentPage() {
                                     alignItems="center">
                                     <Box
                                         component={"img"}
-                                        src={`https://qr.sepay.vn/img?bank=VPB&acc=0916022260&template=compact&amount=${dataOrderDetail.total_amount}&des=NAP ${dataOrderDetail.id_order}`}
+                                        src={`https://qr.sepay.vn/img?bank=VPB&acc=0916022260&template=compact&amount=${dataOrderDetail.total_amount}&des=NAP${dataOrderDetail.id_order}`}
                                         alt="QR Code"
                                         sx={{ width: 500, mb: 2 }}
                                     />
@@ -156,7 +156,7 @@ export default function QrOrderPaymentPage() {
                                     }).format(dataOrderDetail.total_amount)}
                                 </Typography>
                                 <Typography>
-                                    <strong>Nội dung CK:</strong> NAP{" "}
+                                    <strong>Nội dung CK:</strong> NAP
                                     {dataOrderDetail.id_order}
                                 </Typography>
                                 <Typography
@@ -164,9 +164,9 @@ export default function QrOrderPaymentPage() {
                                     color="text.secondary"
                                     mt={1}>
                                     Lưu ý: Vui lòng giữ nguyên nội dung chuyển
-                                    khoản{" "}
+                                    khoản
                                     <strong>
-                                        NAP {dataOrderDetail.id_order}
+                                        NAP{dataOrderDetail.id_order}
                                     </strong>{" "}
                                     để hệ thống tự động xác nhận thanh toán.
                                 </Typography>
